@@ -379,8 +379,9 @@ input[type="text"]:focus{
 /* Bubble (vars set per side) */
 .bubble{
   position: relative;
-  width: min(42ch, 86%);
-  max-width: 680px;
+  display: inline-block;
+  width: fit-content;
+  max-width: min(86%, 680px, 42ch);
   background: var(--bubble-bg);
   color: var(--bubble-text);
   border-radius: 12px;
