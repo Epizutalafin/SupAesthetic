@@ -54,14 +54,107 @@
           </div>
 
           <div class="row">
-            <label class="label">Thème</label>
-            <div class="themePills">
-              <button class="pill isActive" data-theme="classic" type="button">Classique</button>
-              <button class="pill" data-theme="constellation" type="button">Constellation</button>
-              <button class="pill" data-theme="tarot" type="button">Tarot</button>
-              <button class="pill" data-theme="custom" type="button">Custom</button>
-            </div>
-          </div>
+  <label class="label">Thème</label>
+
+  <div class="themePills" id="themePills" role="radiogroup" aria-label="Thèmes visuels">
+    <button class="pill isActive" type="button"
+      data-theme="color"
+      role="radio" aria-checked="true"
+      title="Couleur unie"
+      aria-label="Couleur unie">
+      🌈
+    </button>
+
+    <button class="pill" type="button"
+      data-theme="constellation"
+      role="radio" aria-checked="false"
+      title="Constellations"
+      aria-label="Constellations">
+      ✨
+    </button>
+
+    <button class="pill" type="button"
+      data-theme="forest"
+      role="radio" aria-checked="false"
+      title="Forêt nocturne"
+      aria-label="Forêt nocturne">
+      🌲
+    </button>
+
+    <button class="pill" type="button"
+      data-theme="urban"
+      role="radio" aria-checked="false"
+      title="Urbain nocturne"
+      aria-label="Urbain nocturne">
+      🌃
+    </button>
+
+    <button class="pill" type="button"
+      data-theme="dungeon"
+      role="radio" aria-checked="false"
+      title="Cachot / pénombre"
+      aria-label="Cachot">
+      🕯️
+    </button>
+
+    <button class="pill" type="button"
+      data-theme="manuscript"
+      role="radio" aria-checked="false"
+      title="Manuscrit ancien"
+      aria-label="Manuscrit">
+      📜
+    </button>
+
+    <button class="pill" type="button"
+      data-theme="marble-black"
+      role="radio" aria-checked="false"
+      title="Marbre noir"
+      aria-label="Marbre noir">
+      💎
+    </button>
+
+    <button class="pill" type="button"
+      data-theme="velvet"
+      role="radio" aria-checked="false"
+      title="Velours / intime"
+      aria-label="Velours">
+      🍷
+    </button>
+
+    <button class="pill" type="button"
+      data-theme="romance"
+      role="radio" aria-checked="false"
+      title="Romance"
+      aria-label="Romance">
+      💕
+    </button>
+
+    <button class="pill" type="button"
+      data-theme="winter"
+      role="radio" aria-checked="false"
+      title="Hiver"
+      aria-label="Hiver">
+      ❄️
+    </button>
+
+    <button class="pill" type="button"
+      data-theme="infernal"
+      role="radio" aria-checked="false"
+      title="Passion / infernal"
+      aria-label="Infernal">
+      🔥
+    </button>
+
+    <button class="pill" type="button"
+      data-theme="oneiric"
+      role="radio" aria-checked="false"
+      title="Onirique"
+      aria-label="Onirique">
+      🔮
+    </button>
+  </div>
+</div>
+
 
           <div class="row">
             <label class="label">Premier message = IA</label>
