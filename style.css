@@ -186,7 +186,7 @@ textarea:focus{
    ========================= */
 .row{
   display: grid;
-  grid-template-columns: 140px 1fr; /* ✅ largeur fixe = alignement parfait */
+  grid-template-columns: 72px 1fr; /* ✅ largeur fixe = alignement parfait */
   align-items: center;
   column-gap: 12px;
 
@@ -211,8 +211,8 @@ textarea:focus{
 /* Label "Nom :" (visible aussi sur mobile) */
 .inputLabel{
   color: var(--muted);
-  font-weight: 600;
-  font-size: .85rem;
+  font-weight: 650;
+  font-size: 0.95rem;
   margin-left: 6px;
   white-space: nowrap;
 }
@@ -238,6 +238,9 @@ input[type="text"]:focus{
 /* Switch dans une row: à droite proprement */
 .row:has(#startsAI) > .switch{
   justify-self: end;
+}
+.row:has(#startsAI) .label{
+  white-space: nowrap;
 }
 
 /* =========================
