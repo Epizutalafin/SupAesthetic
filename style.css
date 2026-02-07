@@ -60,7 +60,6 @@
 
   /* =========================
      Bubble styles per speaker
-     (plus blanc pour mieux ressortir sur marbre noir)
      ========================= */
   --bubble-bg-supa: rgba(255,255,255,.90);
   --bubble-text-supa: rgba(10,12,14,.92);
