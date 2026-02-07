@@ -630,27 +630,42 @@ body.exporting .pageSpacer{ width: var(--page-w) !important; height: var(--page-
 }
 
 /* =========================
-   Theme pills
+   Theme emoji pills
    ========================= */
 .themePills{
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* ✅ 6 par ligne */
   gap: 8px;
+  max-width: 100%;
 }
 
 .pill{
-  padding: .35rem .7rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.18);
-  background: rgba(255,255,255,.06);
-  color: var(--text);
-  font-weight: 650;
-  font-size: .85rem;
+  all: unset;                /* 🔥 supprime l'apparence bouton */
+  aspect-ratio: 1 / 1;       /* carré parfait */
+  display: grid;
+  place-items: center;
+
+  font-size: 20px;           /* taille emoji */
+  line-height: 1;
+
   cursor: pointer;
-  transition: .15s ease;
+  border-radius: 10px;
+
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.18);
+
+  transition: background .15s ease, border-color .15s ease, transform .08s ease;
+}
+
+.pill:hover{
+  background: rgba(255,255,255,.12);
+}
+
+.pill:active{
+  transform: scale(0.96);
 }
 
 .pill.isActive{
   background: rgba(215,192,138,.22);
-  border-color: rgba(215,192,138,.35);
+  border-color: rgba(215,192,138,.45);
 }
