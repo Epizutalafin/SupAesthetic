@@ -191,4 +191,466 @@ textarea:focus{
   column-gap: 12px;
 
   padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,.
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.row:last-of-type{ border-bottom: none; }
+
+.label{
+  color: var(--muted);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+/* Conteneur outils à droite */
+.rowRight{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+/* Label "Nom :" */
+.inputLabel{
+  color: var(--muted);
+  font-weight: 650;
+  font-size: 0.95rem;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
+/* Inputs */
+input[type="text"]{
+  width: 160px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.22);
+  color: var(--text);
+  padding: .55rem .7rem;
+  outline: none;
+}
+input[type="text"]:focus{
+  border-color: rgba(215,192,138,.35);
+  box-shadow: 0 0 0 4px rgba(215,192,138,.10);
+}
+.rowRight input[type="text"]{ width: 150px; }
+
+/* Switch dans la row "Premier message = IA" */
+.row:has(#startsAI) > .switch{
+  justify-self: end;
+}
+
+/* =========================
+   Dots
+   ========================= */
+.colorDot{
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(10,12,14,.82);
+  cursor: pointer;
+  padding: 0;
+}
+
+.bubbleDot{
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.62);
+  cursor: pointer;
+  padding: 0;
+}
+
+/* =========================
+   Mobile tweaks (FIXED)
+   ========================= */
+@media (max-width: 640px){
+  .row{
+    grid-template-columns: 110px 1fr;
+    column-gap: 10px;
+  }
+
+  .rowRight{ gap: 8px; }
+
+  .colorDot,
+  .bubbleDot{
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+  }
+
+  .bubbleDot{ border-radius: 10px; }
+
+  .inputLabel{
+    font-size: .82rem;
+    margin-left: 4px;
+  }
+
+  .rowRight input[type="text"]{ width: 120px; }
+}
+
+/* =========================
+   Palette
+   ========================= */
+.palette{
+  position: absolute;
+  z-index: 999;
+  background: rgba(20,22,26,.96);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 18px 50px rgba(0,0,0,.45);
+  display: grid;
+  grid-template-columns: repeat(4, 22px);
+  gap: 10px;
+}
+
+.swatch{
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.18);
+  cursor: pointer;
+  padding: 0;
+}
+.swatch.isActive{
+  outline: 2px solid rgba(215,192,138,.70);
+  outline-offset: 2px;
+}
+
+/* =========================
+   Switch (menu & bubble tools)
+   ========================= */
+.switch{
+  position: relative;
+  width: 50px;
+  height: 28px;
+  display: inline-block;
+  -webkit-tap-highlight-color: transparent;
+}
+.switch input{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.slider{
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: .18s ease;
+}
+.slider:before{
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  top: 2px;
+  left: 3px;
+  background: rgba(255,255,255,.86);
+  border-radius: 999px;
+  transition: .18s ease;
+}
+.switch input:checked + .slider{
+  background: rgba(215,192,138,.26);
+  border-color: rgba(215,192,138,.35);
+}
+.switch input:checked + .slider:before{
+  transform: translateX(22px);
+}
+
+/* =========================
+   Buttons
+   ========================= */
+.buttons{
+  display: flex;
+  gap: 10px;
+  padding-top: 12px;
+}
+
+.btn{
+  flex: 1;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  padding: .7rem .9rem;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 750;
+}
+.btn.primary{
+  background: rgba(215,192,138,.18);
+  border-color: rgba(215,192,138,.28);
+}
+
+.meta{
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+/* =========================
+   Output / Pages
+   ========================= */
+.output{ padding: 14px 0 22px; }
+
+.pages{
+  display: grid;
+  gap: 18px;
+  justify-items: center;
+}
+
+.pageSpacer{
+  width: calc(var(--page-w) * var(--page-scale));
+  height: calc(var(--page-h) * var(--page-scale));
+  position: relative;
+}
+
+.page{
+  width: var(--page-w);
+  height: var(--page-h);
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 22px 70px rgba(0,0,0,.42);
+  transform: scale(var(--page-scale));
+  transform-origin: top left;
+}
+
+.page .paper{
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(900px 520px at 30% 15%, rgba(255,255,255,.55), transparent 58%),
+    radial-gradient(900px 620px at 70% 35%, rgba(255,255,255,.38), transparent 62%),
+    linear-gradient(180deg, var(--paperA), var(--paperB));
+}
+
+.page .paper:after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--theme-img);
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: var(--theme-img-opacity);
+  mix-blend-mode: var(--theme-img-blend);
+  pointer-events: none;
+}
+
+.page .content{
+  position: relative;
+  height: 100%;
+  padding: var(--content-pad-y) var(--content-pad-x);
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap);
+}
+
+/* =========================
+   Bubbles (FIX: no center drift)
+   - On garde tes marges : c'est le padding du content
+   - On aligne les bulles via align-self
+   ========================= */
+.bubble{
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+  max-width: min(86%, 680px, 42ch);
+
+  background: var(--bubble-bg);
+  color: var(--bubble-text);
+  border-radius: 12px;
+  padding: var(--bubble-pad-y) var(--bubble-pad-x);
+  border: 1px solid var(--bubble-border);
+
+  font-size: var(--bubble-font);
+  line-height: var(--bubble-line);
+
+  /* ✅ plus de centrage */
+  margin: 0;
+}
+
+/* Supa (left) */
+.bubble.left{
+  --bubble-bg: var(--bubble-bg-supa);
+  --bubble-text: var(--bubble-text-supa);
+  --bubble-border: var(--bubble-border-supa);
+
+  align-self: flex-start; /* ✅ collé à gauche (avec la marge de page) */
+}
+
+/* Moi (right) */
+.bubble.right{
+  --bubble-bg: var(--bubble-bg-me);
+  --bubble-text: var(--bubble-text-me);
+  --bubble-border: var(--bubble-border-me);
+
+  align-self: flex-end; /* ✅ collé à droite (avec la marge de page) */
+}
+
+/* Name */
+.bubbleName{
+  font-weight: 600;
+  font-size: .92em;
+  margin-bottom: 8px;
+  opacity: .92;
+  color: var(--name-color, rgba(10,12,14,.82));
+}
+
+.bubble.left .bubbleName{
+  --name-color: var(--name-color-supa);
+  text-align: left;
+}
+.bubble.right .bubbleName{
+  --name-color: var(--name-color-me);
+  text-align: right;
+}
+
+/* Text */
+.bubble p{
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.bubble.right p{ text-align: right; }
+
+.bubble p em{ font-style: italic; opacity: .92; }
+.bubble p strong{ font-weight: 800; letter-spacing: .15px; }
+
+/* Bubble tools */
+.bubbleTools{
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 3;
+}
+
+/* Toggle inside bubbles: OFF visible */
+.bubbleTools .switch{
+  width: 54px;
+  height: 30px;
+}
+
+.bubbleTools .slider{
+  background: rgba(0,0,0,.16);
+  border: 1px solid rgba(0,0,0,.22);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
+}
+
+.bubbleTools .slider:before{
+  width: 22px;
+  height: 22px;
+  top: 3px;
+  left: 3px;
+  background: rgba(255,255,255,.98);
+  border: 1px solid rgba(0,0,0,.22);
+  box-shadow: 0 6px 16px rgba(0,0,0,.35);
+}
+
+.bubbleTools .switch input:checked + .slider{
+  background: rgba(215,192,138,.48);
+  border-color: rgba(215,192,138,.60);
+}
+
+.bubbleTools .switch input:checked + .slider:before{
+  transform: translateX(24px);
+}
+
+/* =========================
+   Export mode
+   ========================= */
+body.exporting .controls,
+body.exporting .hero,
+body.exporting .bubbleTools{
+  display: none !important;
+}
+
+body.exporting .output{ padding-top: 0 !important; }
+body.exporting .page{ transform: none !important; box-shadow: none !important; }
+body.exporting .pageSpacer{ width: var(--page-w) !important; height: var(--page-h) !important; }
+
+/* =========================
+   Mobile export panel
+   ========================= */
+.exportPanel{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  z-index: 9999;
+}
+
+.exportPanelCard{
+  width: min(520px, 100%);
+  background: rgba(20,22,26,.95);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.exportPanelTitle{
+  font-weight: 850;
+  margin-bottom: 6px;
+}
+
+.exportPanelHint{
+  color: rgba(255,255,255,.72);
+  font-size: .92rem;
+  line-height: 1.35;
+  margin-bottom: 10px;
+}
+
+.exportLinks{
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.exportLinks a{
+  display: block;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.92);
+  text-decoration: none;
+  font-weight: 750;
+}
+
+/* =========================
+   Theme pills
+   ========================= */
+.themePills{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pill{
+  padding: .35rem .7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  font-weight: 650;
+  font-size: .85rem;
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+.pill.isActive{
+  background: rgba(215,192,138,.22);
+  border-color: rgba(215,192,138,.35);
+}
