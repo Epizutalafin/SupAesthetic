@@ -1,3 +1,8 @@
+/* =========================
+   SupAesthetic — script.js
+   ========================= */
+
+/* ===== Constants ===== */
 const EXPORT_W = 832;
 const EXPORT_H = 1472;
 
@@ -7,7 +12,7 @@ const PNG_RENDER_SCALE = 2.5;
 const CENTER_MIN_FREE = 140;
 const CENTER_MAX_SHIFT = 260;
 
-/* ===== Palette noms ===== */
+/* ===== Palettes: names ===== */
 const NAME_CHOICES = [
   { id: "neutral", label: "Neutral", value: "rgba(10,12,14,.82)" },
   { id: "dark_silver", label: "Dark silver", value: "#6f7782" },
@@ -23,7 +28,7 @@ const NAME_CHOICES = [
   { id: "ivory", label: "Ivory", value: "#8A7F6A" },
 ];
 
-/* ===== Presets bulles (Supa/Moi indépendants) ===== */
+/* ===== Presets: bubbles (per speaker) ===== */
 const BUBBLE_CHOICES = [
   {
     id: "light",
@@ -86,6 +91,8 @@ const els = {
   exportPanel: document.getElementById("exportPanel"),
   exportLinks: document.getElementById("exportLinks"),
   exportClose: document.getElementById("exportClose"),
+
+  themeColor: document.getElementById("themeColor"), // ✅ input[type=color] (hidden)
 };
 
 const root = document.documentElement;
@@ -94,7 +101,9 @@ let activePaletteEl = null;
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const isMobileLike = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-/* ===== Page size/scale ===== */
+/* =========================
+   Page size/scale
+   ========================= */
 function setPageSizeCSSVars() {
   root.style.setProperty("--page-w", `${EXPORT_W}px`);
   root.style.setProperty("--page-h", `${EXPORT_H}px`);
@@ -107,34 +116,53 @@ function updatePageScale() {
   root.style.setProperty("--page-scale", String(scale));
 }
 
-/* ===== Theme ===== */
+/* =========================
+   Theme (emoji pills)
+   Note: wheel 🌈 will be added next
+   ========================= */
 function applyTheme(themeId) {
-  root.dataset.theme = themeId || "classic";
-  try { localStorage.setItem(LS_THEME, root.dataset.theme); } catch {}
+  const t = themeId || "color"; // ✅ default now = 🌈
+  root.dataset.theme = t;
+  try { localStorage.setItem(LS_THEME, t); } catch {}
+}
+
+function setActiveThemePill(themeId) {
+  const pills = document.querySelectorAll(".pill[data-theme]");
+  pills.forEach((p) => {
+    const on = p.dataset.theme === themeId;
+    p.classList.toggle("isActive", on);
+    p.setAttribute("aria-checked", on ? "true" : "false");
+  });
 }
 
 function initTheme() {
-  let saved = "classic";
-  try { saved = localStorage.getItem(LS_THEME) || "classic"; } catch {}
+  let saved = "color";
+  try { saved = localStorage.getItem(LS_THEME) || "color"; } catch {}
+
   applyTheme(saved);
+  setActiveThemePill(saved);
 
   const pills = document.querySelectorAll(".pill[data-theme]");
   pills.forEach((p) => {
-    p.classList.toggle("isActive", p.dataset.theme === saved);
     p.addEventListener("click", () => {
-      pills.forEach((x) => x.classList.remove("isActive"));
-      p.classList.add("isActive");
-      applyTheme(p.dataset.theme);
+      const t = p.dataset.theme || "color";
+      applyTheme(t);
+      setActiveThemePill(t);
+
+      // 🌈 wheel hook: added in next step
+      if (t === "color") {
+        els.themeColor?.click();
+      }
     });
   });
 }
 
-/* ===== Name styles ===== */
+/* =========================
+   Name styles
+   ========================= */
 function setNameStyle(which, choice) {
-  const colorVar = `--name-color-${which}`;
   const col = choice?.value || "rgba(10,12,14,.82)";
-
-  root.style.setProperty(colorVar, col);
+  root.style.setProperty(`--name-color-${which}`, col);
 
   const btn = which === "supa" ? els.supaColorBtn : els.meColorBtn;
   if (btn) btn.style.background = col;
@@ -167,7 +195,9 @@ function initNameStyles() {
   applyFromStorage("me", LS_NAME_ME);
 }
 
-/* ===== Bubble styles per speaker ===== */
+/* =========================
+   Bubble styles per speaker
+   ========================= */
 function setBubbleStyle(which, choice) {
   const pick = choice || BUBBLE_CHOICES[0];
 
@@ -198,27 +228,32 @@ function initBubbleStyles() {
   load("me", LS_BUBBLE_ME);
 }
 
-/* ===== Palette system ===== */
+/* =========================
+   Palette system (shared)
+   ========================= */
 function closePalette() {
   if (!activePaletteEl) return;
   try { activePaletteEl.remove(); } catch {}
   activePaletteEl = null;
 }
 
-function openNamePalette(anchorBtn, which) {
-  if (!anchorBtn) return;
-  closePalette();
-
+function positionPalette(pal, anchorBtn) {
   const rect = anchorBtn.getBoundingClientRect();
-  const pal = document.createElement("div");
-  pal.className = "palette";
-  pal.setAttribute("role", "dialog");
-  pal.setAttribute("aria-label", "Palette de couleurs (nom)");
-
   const top = rect.bottom + window.scrollY + 8;
   const left = Math.min(window.innerWidth - 20 - 140, rect.left + window.scrollX - 110);
   pal.style.top = `${top}px`;
   pal.style.left = `${Math.max(12, left)}px`;
+}
+
+function openNamePalette(anchorBtn, which) {
+  if (!anchorBtn) return;
+  closePalette();
+
+  const pal = document.createElement("div");
+  pal.className = "palette";
+  pal.setAttribute("role", "dialog");
+  pal.setAttribute("aria-label", "Palette de couleurs (nom)");
+  positionPalette(pal, anchorBtn);
 
   const currentKey = currentNameKey(which);
 
@@ -250,16 +285,11 @@ function openBubblePalette(anchorBtn, which) {
   if (!anchorBtn) return;
   closePalette();
 
-  const rect = anchorBtn.getBoundingClientRect();
   const pal = document.createElement("div");
   pal.className = "palette";
   pal.setAttribute("role", "dialog");
   pal.setAttribute("aria-label", "Palette bulles");
-
-  const top = rect.bottom + window.scrollY + 8;
-  const left = Math.min(window.innerWidth - 20 - 140, rect.left + window.scrollX - 110);
-  pal.style.top = `${top}px`;
-  pal.style.left = `${Math.max(12, left)}px`;
+  positionPalette(pal, anchorBtn);
 
   let saved = "light";
   try {
@@ -302,22 +332,30 @@ function initPalettes() {
   els.supaBubbleBtn?.addEventListener("pointerdown", open(openBubblePalette, els.supaBubbleBtn, "supa"));
   els.meBubbleBtn?.addEventListener("pointerdown", open(openBubblePalette, els.meBubbleBtn, "me"));
 
-  document.addEventListener("pointerdown", (e) => {
-    if (!activePaletteEl) return;
-    const t = e.target;
-    const isBtn =
-      t === els.supaColorBtn || t === els.meColorBtn ||
-      t === els.supaBubbleBtn || t === els.meBubbleBtn;
-    const inside = activePaletteEl.contains(t);
-    if (!inside && !isBtn) closePalette();
-  }, { capture: true });
+  document.addEventListener(
+    "pointerdown",
+    (e) => {
+      if (!activePaletteEl) return;
+      const t = e.target;
+      const isBtn =
+        t === els.supaColorBtn ||
+        t === els.meColorBtn ||
+        t === els.supaBubbleBtn ||
+        t === els.meBubbleBtn;
+      const inside = activePaletteEl.contains(t);
+      if (!inside && !isBtn) closePalette();
+    },
+    { capture: true }
+  );
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closePalette();
   });
 }
 
-/* ===== Text helpers ===== */
+/* =========================
+   Text helpers
+   ========================= */
 function escapeHTML(s) {
   return (s || "")
     .replace(/&/g, "&amp;")
@@ -342,25 +380,38 @@ function htmlToLightMarkdown(html) {
 
     const tag = node.tagName.toLowerCase();
 
-    if (tag === "br") { out.push("\n"); return; }
+    if (tag === "br") {
+      out.push("\n");
+      return;
+    }
 
     if (tag === "strong" || tag === "b") {
-      out.push("**"); [...node.childNodes].forEach(walk); out.push("**"); return;
+      out.push("**");
+      [...node.childNodes].forEach(walk);
+      out.push("**");
+      return;
     }
+
     if (tag === "em" || tag === "i") {
-      out.push("*"); [...node.childNodes].forEach(walk); out.push("*"); return;
+      out.push("*");
+      [...node.childNodes].forEach(walk);
+      out.push("*");
+      return;
     }
-    if (["p","div","section","article"].includes(tag)) {
+
+    if (["p", "div", "section", "article"].includes(tag)) {
       [...node.childNodes].forEach(walk);
       out.push("\n\n");
       return;
     }
+
     [...node.childNodes].forEach(walk);
   };
 
   [...doc.body.childNodes].forEach(walk);
 
-  return out.join("")
+  return out
+    .join("")
     .replace(/\r\n/g, "\n")
     .replace(/[ \t]+\n/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
@@ -378,30 +429,40 @@ function renderLightMarkdown(text) {
 els.input?.addEventListener("paste", (e) => {
   const html = e.clipboardData?.getData("text/html") || "";
   if (!html || !/<(em|i|strong|b|span|p|div|br)\b/i.test(html)) return;
+
   e.preventDefault();
   const md = htmlToLightMarkdown(html);
   if (!md) return;
+
   const before = els.input.value || "";
   const glue = before && !before.endsWith("\n\n") ? "\n\n" : "";
   els.input.value = before + glue + md;
 });
 
-/* ===== Conversation parsing/render ===== */
+/* =========================
+   Conversation parsing/render
+   ========================= */
 function parseBlocks(raw) {
   const cleaned = (raw || "").trim();
   if (!cleaned) return [];
   return cleaned.split(/\n\s*\n+/g).map((s) => s.trim()).filter(Boolean);
 }
 
-function getSupaName() { return (els.supaName?.value || "Supa").trim() || "Supa"; }
-function startsByAI() { return Boolean(els.startsAI?.checked); }
+function getSupaName() {
+  return (els.supaName?.value || "Supa").trim() || "Supa";
+}
+function startsByAI() {
+  return Boolean(els.startsAI?.checked);
+}
 
 function sideForIndex(i) {
   const first = startsByAI() ? "left" : "right";
-  return i % 2 === 0 ? first : (first === "left" ? "right" : "left");
+  return i % 2 === 0 ? first : first === "left" ? "right" : "left";
 }
 
-function speakerForSide(side) { return side === "left" ? getSupaName() : "Moi"; }
+function speakerForSide(side) {
+  return side === "left" ? getSupaName() : "Moi";
+}
 
 function mountPage(page) {
   const spacer = document.createElement("div");
@@ -494,11 +555,13 @@ function softCenterPage(page) {
 
   const last = bubbles[bubbles.length - 1];
   const usedBottom = last.offsetTop + last.offsetHeight;
+
   const inner = content.clientHeight - padTop - padBottom;
   const used = usedBottom - padTop;
   const free = inner - used;
 
   if (free <= CENTER_MIN_FREE) return;
+
   const shift = Math.min(Math.floor(free / 2), CENTER_MAX_SHIFT);
   content.style.transform = `translateY(${shift}px)`;
 }
@@ -534,15 +597,19 @@ function generate() {
   paginate(bubbles);
 }
 
-/* ===== Export PNG ===== */
+/* =========================
+   Export PNG
+   ========================= */
 function downscaleCanvas(srcCanvas, outW, outH) {
   const out = document.createElement("canvas");
   out.width = outW;
   out.height = outH;
+
   const ctx = out.getContext("2d", { alpha: true });
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
   ctx.drawImage(srcCanvas, 0, 0, outW, outH);
+
   return out;
 }
 
@@ -611,9 +678,8 @@ async function exportAllPagesPNG() {
       useCORS: true,
     });
 
-    const finalCanvas = PNG_RENDER_SCALE === 1
-      ? bigCanvas
-      : downscaleCanvas(bigCanvas, EXPORT_W, EXPORT_H);
+    const finalCanvas =
+      PNG_RENDER_SCALE === 1 ? bigCanvas : downscaleCanvas(bigCanvas, EXPORT_W, EXPORT_H);
 
     const filename = `rp_page_${String(i + 1).padStart(2, "0")}.png`;
 
@@ -627,6 +693,7 @@ async function exportAllPagesPNG() {
         downloadURL(url, filename);
         setTimeout(() => URL.revokeObjectURL(url), 4000);
       }, "image/png");
+
       await wait(120);
     }
   }
@@ -635,7 +702,9 @@ async function exportAllPagesPNG() {
   if (isMobile && mobileItems.length) openExportPanel(mobileItems);
 }
 
-/* ===== Events/init ===== */
+/* =========================
+   Events / init
+   ========================= */
 els.btnGenerate?.addEventListener("click", generate);
 els.btnExport?.addEventListener("click", exportAllPagesPNG);
 
@@ -643,6 +712,7 @@ window.addEventListener("resize", updatePageScale);
 
 setPageSizeCSSVars();
 updatePageScale();
+
 initTheme();
 initBubbleStyles();
 initNameStyles();
