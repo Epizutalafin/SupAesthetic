@@ -186,7 +186,7 @@ textarea:focus{
    ========================= */
 .row{
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: 140px 1fr; /* ✅ largeur fixe = alignement parfait */
   align-items: center;
   column-gap: 12px;
 
@@ -206,7 +206,6 @@ textarea:focus{
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
-  width: auto;
 }
 
 /* Label "Nom :" (visible aussi sur mobile) */
@@ -237,7 +236,7 @@ input[type="text"]:focus{
 .rowRight input[type="text"]{ width: 150px; }
 
 /* Switch dans une row: à droite proprement */
-.row > .switch{
+.row:has(#startsAI) > .switch{
   justify-self: end;
 }
 
@@ -267,9 +266,12 @@ input[type="text"]:focus{
 /* =========================
    Mobile tweaks
    ========================= */
-@media (max-width: 640px){
-  /* On réduit un peu les écarts */
-  .row{ column-gap: 10px; }
+  @media (max-width: 640px){
+  .row{
+    grid-template-columns: 110px 1fr; /* labels plus courts sur mobile */
+    column-gap: 10px;
+  }
+}
 
   .rowRight{ gap: 8px; }
 
