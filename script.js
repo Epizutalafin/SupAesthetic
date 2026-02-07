@@ -1,8 +1,6 @@
 /* =========================
-   SupAesthetic — script.js
+   Constants
    ========================= */
-
-/* ===== Constants ===== */
 const EXPORT_W = 832;
 const EXPORT_H = 1472;
 
@@ -12,7 +10,9 @@ const PNG_RENDER_SCALE = 2.5;
 const CENTER_MIN_FREE = 140;
 const CENTER_MAX_SHIFT = 260;
 
-/* ===== Palettes: names ===== */
+/* =========================
+   Palette choices
+   ========================= */
 const NAME_CHOICES = [
   { id: "neutral", label: "Neutral", value: "rgba(10,12,14,.82)" },
   { id: "dark_silver", label: "Dark silver", value: "#6f7782" },
@@ -28,7 +28,6 @@ const NAME_CHOICES = [
   { id: "ivory", label: "Ivory", value: "#8A7F6A" },
 ];
 
-/* ===== Presets: bubbles (per speaker) ===== */
 const BUBBLE_CHOICES = [
   {
     id: "light",
@@ -64,18 +63,26 @@ const BUBBLE_CHOICES = [
   },
 ];
 
-/* ===== LocalStorage keys ===== */
+/* =========================
+   LocalStorage keys
+   ========================= */
 const LS_THEME = "supAesthetic_theme";
+const LS_THEME_COLOR = "supAesthetic_themeColor";
+
 const LS_NAME_SUPA = "supAesthetic_nameColor_supa";
 const LS_NAME_ME = "supAesthetic_nameColor_me";
+
 const LS_BUBBLE_SUPA = "supAesthetic_bubbleStyle_supa";
 const LS_BUBBLE_ME = "supAesthetic_bubbleStyle_me";
 
-/* ===== Elements ===== */
+/* =========================
+   Elements
+   ========================= */
 const els = {
   input: document.getElementById("inputText"),
   pages: document.getElementById("pages"),
   pageCount: document.getElementById("pageCount"),
+
   startsAI: document.getElementById("startsAI"),
   supaName: document.getElementById("supaName"),
 
@@ -92,7 +99,7 @@ const els = {
   exportLinks: document.getElementById("exportLinks"),
   exportClose: document.getElementById("exportClose"),
 
-  themeColor: document.getElementById("themeColor"), // ✅ input[type=color] (hidden)
+  themeColor: document.getElementById("themeColor"), // hidden input[type=color]
 };
 
 const root = document.documentElement;
@@ -100,6 +107,45 @@ let activePaletteEl = null;
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const isMobileLike = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+/* =========================
+   Helpers — theme color 🌈
+   ========================= */
+function normalizeHex(hex) {
+  const s = (hex || "").trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(s)) return s.toLowerCase();
+  return "#f7f1e3";
+}
+
+function getSavedThemeColor() {
+  try { return normalizeHex(localStorage.getItem(LS_THEME_COLOR) || "#f7f1e3"); }
+  catch { return "#f7f1e3"; }
+}
+
+function setSavedThemeColor(hex) {
+  const c = normalizeHex(hex);
+  try { localStorage.setItem(LS_THEME_COLOR, c); } catch {}
+  return c;
+}
+
+function clearSolidThemeOverrides() {
+  root.style.removeProperty("--paperA");
+  root.style.removeProperty("--paperB");
+  root.style.removeProperty("--theme-img");
+  root.style.removeProperty("--theme-img-opacity");
+  root.style.removeProperty("--theme-img-blend");
+}
+
+function applySolidThemeColor(hex) {
+  const c = normalizeHex(hex);
+  root.style.setProperty("--paperA", c);
+  root.style.setProperty("--paperB", c);
+  root.style.setProperty("--theme-img", "none");
+  root.style.setProperty("--theme-img-opacity", "0");
+  root.style.setProperty("--theme-img-blend", "normal");
+
+  if (els.themeColor) els.themeColor.value = c;
+}
 
 /* =========================
    Page size/scale
@@ -118,14 +164,7 @@ function updatePageScale() {
 
 /* =========================
    Theme (emoji pills)
-   Note: wheel 🌈 will be added next
    ========================= */
-function applyTheme(themeId) {
-  const t = themeId || "color"; // ✅ default now = 🌈
-  root.dataset.theme = t;
-  try { localStorage.setItem(LS_THEME, t); } catch {}
-}
-
 function setActiveThemePill(themeId) {
   const pills = document.querySelectorAll(".pill[data-theme]");
   pills.forEach((p) => {
@@ -135,9 +174,22 @@ function setActiveThemePill(themeId) {
   });
 }
 
+function applyTheme(themeId) {
+  const t = (themeId || "color").trim() || "color";
+  root.dataset.theme = t;
+
+  try { localStorage.setItem(LS_THEME, t); } catch {}
+
+  // reset overrides when leaving the solid-color theme
+  if (t !== "color") clearSolidThemeOverrides();
+
+  // restore saved color when entering the solid-color theme
+  if (t === "color") applySolidThemeColor(getSavedThemeColor());
+}
+
 function initTheme() {
   let saved = "color";
-  try { saved = localStorage.getItem(LS_THEME) || "color"; } catch {}
+  try { saved = (localStorage.getItem(LS_THEME) || "color").trim() || "color"; } catch {}
 
   applyTheme(saved);
   setActiveThemePill(saved);
@@ -145,16 +197,22 @@ function initTheme() {
   const pills = document.querySelectorAll(".pill[data-theme]");
   pills.forEach((p) => {
     p.addEventListener("click", () => {
-      const t = p.dataset.theme || "color";
+      const t = (p.dataset.theme || "color").trim() || "color";
       applyTheme(t);
       setActiveThemePill(t);
 
-      // 🌈 wheel hook: added in next step
-      if (t === "color") {
-        els.themeColor?.click();
-      }
+      if (t === "color") els.themeColor?.click();
     });
   });
+
+  // picker => save + apply
+  els.themeColor?.addEventListener("input", () => {
+    const c = setSavedThemeColor(els.themeColor.value);
+    applySolidThemeColor(c);
+  });
+
+  // keep picker in sync even if user clicks 🌈 repeatedly
+  if (els.themeColor) els.themeColor.value = getSavedThemeColor();
 }
 
 /* =========================
@@ -245,71 +303,34 @@ function positionPalette(pal, anchorBtn) {
   pal.style.left = `${Math.max(12, left)}px`;
 }
 
-function openNamePalette(anchorBtn, which) {
+function openChoicePalette({ anchorBtn, which, choices, ariaLabel, onPick, isActiveKey }) {
   if (!anchorBtn) return;
   closePalette();
 
   const pal = document.createElement("div");
   pal.className = "palette";
   pal.setAttribute("role", "dialog");
-  pal.setAttribute("aria-label", "Palette de couleurs (nom)");
+  pal.setAttribute("aria-label", ariaLabel);
   positionPalette(pal, anchorBtn);
 
-  const currentKey = currentNameKey(which);
+  const currentKey = isActiveKey?.(which) || "";
 
-  NAME_CHOICES.forEach((c) => {
+  choices.forEach((c) => {
     const sw = document.createElement("button");
     sw.type = "button";
     sw.className = "swatch";
     sw.title = c.label;
 
-    const key = (c.value || "").replace(/\s+/g, "");
-    sw.style.background = c.value;
+    const key = (c.value || c.id || "").toString().replace(/\s+/g, "");
+    if (c.value) sw.style.background = c.value;
+    else sw.style.background = c.chip || c.bg;
+
     if (key && key === currentKey) sw.classList.add("isActive");
 
     sw.addEventListener("pointerdown", (e) => {
       e.preventDefault();
       e.stopPropagation();
-      setNameStyle(which, c);
-      closePalette();
-    });
-
-    pal.appendChild(sw);
-  });
-
-  document.body.appendChild(pal);
-  activePaletteEl = pal;
-}
-
-function openBubblePalette(anchorBtn, which) {
-  if (!anchorBtn) return;
-  closePalette();
-
-  const pal = document.createElement("div");
-  pal.className = "palette";
-  pal.setAttribute("role", "dialog");
-  pal.setAttribute("aria-label", "Palette bulles");
-  positionPalette(pal, anchorBtn);
-
-  let saved = "light";
-  try {
-    saved = localStorage.getItem(which === "supa" ? LS_BUBBLE_SUPA : LS_BUBBLE_ME) || "light";
-  } catch {}
-
-  BUBBLE_CHOICES.forEach((c) => {
-    const sw = document.createElement("button");
-    sw.type = "button";
-    sw.className = "swatch";
-    sw.title = c.label;
-
-    sw.style.background = c.chip || c.bg;
-    if (c.id === "dark") sw.style.borderColor = "rgba(255,255,255,.35)";
-    if (c.id === saved) sw.classList.add("isActive");
-
-    sw.addEventListener("pointerdown", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setBubbleStyle(which, c);
+      onPick(which, c);
       closePalette();
     });
 
@@ -321,29 +342,87 @@ function openBubblePalette(anchorBtn, which) {
 }
 
 function initPalettes() {
-  const open = (fn, btn, which) => (e) => {
+  const open = (fn) => (e) => {
     e.preventDefault();
     e.stopPropagation();
-    fn(btn, which);
+    fn();
   };
 
-  els.supaColorBtn?.addEventListener("pointerdown", open(openNamePalette, els.supaColorBtn, "supa"));
-  els.meColorBtn?.addEventListener("pointerdown", open(openNamePalette, els.meColorBtn, "me"));
-  els.supaBubbleBtn?.addEventListener("pointerdown", open(openBubblePalette, els.supaBubbleBtn, "supa"));
-  els.meBubbleBtn?.addEventListener("pointerdown", open(openBubblePalette, els.meBubbleBtn, "me"));
+  els.supaColorBtn?.addEventListener(
+    "pointerdown",
+    open(() =>
+      openChoicePalette({
+        anchorBtn: els.supaColorBtn,
+        which: "supa",
+        choices: NAME_CHOICES,
+        ariaLabel: "Palette de couleurs (nom)",
+        onPick: (which, c) => setNameStyle(which, c),
+        isActiveKey: (which) => currentNameKey(which),
+      })
+    )
+  );
+
+  els.meColorBtn?.addEventListener(
+    "pointerdown",
+    open(() =>
+      openChoicePalette({
+        anchorBtn: els.meColorBtn,
+        which: "me",
+        choices: NAME_CHOICES,
+        ariaLabel: "Palette de couleurs (nom)",
+        onPick: (which, c) => setNameStyle(which, c),
+        isActiveKey: (which) => currentNameKey(which),
+      })
+    )
+  );
+
+  els.supaBubbleBtn?.addEventListener(
+    "pointerdown",
+    open(() =>
+      openChoicePalette({
+        anchorBtn: els.supaBubbleBtn,
+        which: "supa",
+        choices: BUBBLE_CHOICES,
+        ariaLabel: "Palette bulles",
+        onPick: (which, c) => setBubbleStyle(which, c),
+        isActiveKey: (which) => {
+          try { return (localStorage.getItem(which === "supa" ? LS_BUBBLE_SUPA : LS_BUBBLE_ME) || "light").trim(); }
+          catch { return "light"; }
+        },
+      })
+    )
+  );
+
+  els.meBubbleBtn?.addEventListener(
+    "pointerdown",
+    open(() =>
+      openChoicePalette({
+        anchorBtn: els.meBubbleBtn,
+        which: "me",
+        choices: BUBBLE_CHOICES,
+        ariaLabel: "Palette bulles",
+        onPick: (which, c) => setBubbleStyle(which, c),
+        isActiveKey: (which) => {
+          try { return (localStorage.getItem(which === "supa" ? LS_BUBBLE_SUPA : LS_BUBBLE_ME) || "light").trim(); }
+          catch { return "light"; }
+        },
+      })
+    )
+  );
 
   document.addEventListener(
     "pointerdown",
     (e) => {
       if (!activePaletteEl) return;
       const t = e.target;
+
       const isBtn =
         t === els.supaColorBtn ||
         t === els.meColorBtn ||
         t === els.supaBubbleBtn ||
         t === els.meBubbleBtn;
-      const inside = activePaletteEl.contains(t);
-      if (!inside && !isBtn) closePalette();
+
+      if (!activePaletteEl.contains(t) && !isBtn) closePalette();
     },
     { capture: true }
   );
@@ -380,23 +459,14 @@ function htmlToLightMarkdown(html) {
 
     const tag = node.tagName.toLowerCase();
 
-    if (tag === "br") {
-      out.push("\n");
-      return;
-    }
+    if (tag === "br") { out.push("\n"); return; }
 
     if (tag === "strong" || tag === "b") {
-      out.push("**");
-      [...node.childNodes].forEach(walk);
-      out.push("**");
-      return;
+      out.push("**"); [...node.childNodes].forEach(walk); out.push("**"); return;
     }
 
     if (tag === "em" || tag === "i") {
-      out.push("*");
-      [...node.childNodes].forEach(walk);
-      out.push("*");
-      return;
+      out.push("*"); [...node.childNodes].forEach(walk); out.push("*"); return;
     }
 
     if (["p", "div", "section", "article"].includes(tag)) {
