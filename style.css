@@ -65,15 +65,15 @@
   --theme-img-opacity: .00;
   --theme-img-blend: multiply;
 }
-:root[data-theme="constellation"]{
-  --paperA: #f4f2ee;
-  --paperB: #fbf8f2;
+:root[data-theme="marbreNoir"] {
+  --paperA: #0f0f12; /* fallback discret */
+  --paperB: #0b0b0e;
+
+  --theme-img: url("themes/marbrenoir.png");
+  --theme-img-opacity: 1;
+  --theme-img-blend: normal;
 }
-:root[data-theme="tarot"]{
-  --paperA: #f5efe2;
-  --paperB: #fbf3e6;
-}
-:root[data-theme="custom"]{}
+
 
 /* =========================
    Base
