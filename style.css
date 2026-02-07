@@ -22,7 +22,7 @@
   --page-scale: 0.60;
 
   /* Layout */
-  --stack-gap: 28px;
+  --stack-gap: 24px;
   --gutter: 88px; /* (garde si tu veux le réutiliser plus tard) */
 
   --content-pad-y: 74px;
