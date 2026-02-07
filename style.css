@@ -1,7 +1,16 @@
+/* =========================================================
+   ROOT VARIABLES
+   ========================================================= */
 :root{
-  /* Export page size */
+  /* Page */
   --page-w: 832px;
   --page-h: 1472px;
+  --page-scale: 0.60;
+
+  /* Layout */
+  --content-pad-y: 68px;
+  --content-pad-x: 46px;
+  --stack-gap: 24px;
 
   /* UI colors */
   --bg: #0b0d10;
@@ -12,76 +21,59 @@
   --accent: #d7c08a;
 
   /* Fonts */
-  --ui-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  --ui-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-  /* Paper */
+  /* Paper (default) */
   --paperA: #f7f1e3;
   --paperB: #fbf7ef;
 
-  /* Preview scale */
-  --page-scale: 0.60;
-
-  /* Layout */
-  --stack-gap: 24px;
-  --gutter: 88px; /* (garde si tu veux le réutiliser plus tard) */
-
-  --content-pad-y: 68px;
-  --content-pad-x: 46px; /* ✅ tes marges latérales "actuelles" */
+  /* Theme overlay */
+  --theme-img: none;
+  --theme-img-opacity: 0;
+  --theme-img-blend: normal;
 
   /* Bubble typography */
   --bubble-font: 25px;
   --bubble-line: 1.38;
 
   /* Bubble paddings */
-  --bubble-pad-y: 18px;
   --bubble-pad-x: 22px;
 
-  /* Speaker name colors */
+  /* Speaker names */
   --name-color-supa: rgba(10,12,14,.82);
   --name-color-me: rgba(10,12,14,.82);
 
-  /* Theme overlay (image) */
-  --theme-img: none;
-  --theme-img-opacity: .00;
-  --theme-img-blend: multiply;
-
-  /* Bubble styles per speaker (Supa = left, Moi = right) */
-  --bubble-bg-supa: rgba(255,255,255,.62);
+  /* Bubble colors (global, clean white) */
+  --bubble-bg-supa: rgba(255,255,255,.82);
   --bubble-text-supa: rgba(10,12,14,.92);
-  --bubble-border-supa: rgba(255,255,255,.55);
+  --bubble-border-supa: rgba(255,255,255,.65);
 
-  --bubble-bg-me: rgba(255,255,255,.62);
+  --bubble-bg-me: rgba(255,255,255,.82);
   --bubble-text-me: rgba(10,12,14,.92);
-  --bubble-border-me: rgba(255,255,255,.55);
+  --bubble-border-me: rgba(255,255,255,.65);
 }
 
-/* =========================
-   Themes
-   ========================= */
+/* =========================================================
+   THEMES
+   ========================================================= */
 :root[data-theme="classic"]{
   --paperA: #f7f1e3;
   --paperB: #fbf7ef;
-  --theme-img: none;
-  --theme-img-opacity: .00;
-  --theme-img-blend: multiply;
 }
-:root[data-theme="marbrenoir"] {
-  --paperA: #0f0f12; /* fallback discret */
+
+:root[data-theme="marbrenoir"]{
+  --paperA: #0f0f12;
   --paperB: #0b0b0e;
 
   --theme-img: url("themes/marbrenoir.png");
   --theme-img-opacity: 1;
-  --theme-img-blend: normal;
 }
 
-
-/* =========================
-   Base
-   ========================= */
+/* =========================================================
+   BASE
+   ========================================================= */
 *{ box-sizing: border-box; }
 html, body{ height: 100%; }
-[hidden]{ display: none !important; }
-
 body{
   margin: 0;
   font-family: var(--ui-font);
@@ -92,336 +84,15 @@ body{
     var(--bg);
 }
 
-.shell{
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 14px;
-}
-
-/* =========================
-   Header
-   ========================= */
-.hero{ padding: 6px 2px 12px; }
-
-.heroTitle{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo{
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: 14px;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.10);
-  color: var(--accent);
-  font-size: 1.2rem;
-}
-
-.h1{
-  font-weight: 850;
-  letter-spacing: .2px;
-  font-size: 1.55rem;
-  line-height: 1.1;
-}
-.h2{
-  color: var(--muted);
-  font-size: .92rem;
-  margin-top: 2px;
-}
-
-/* =========================
-   Controls panel
-   ========================= */
-.controls{
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 12px;
-  box-shadow: 0 18px 50px rgba(0,0,0,.28);
-}
-
-.controlsGrid{
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-
-@media (min-width: 900px){
-  .controlsGrid{
-    grid-template-columns: 1.35fr .65fr;
-    align-items: start;
-  }
-}
-
-.blockTitle{
-  font-weight: 750;
-  margin-bottom: 8px;
-  color: rgba(255,255,255,.88);
-}
-
-/* Textarea */
-textarea{
-  width: 100%;
-  min-height: 260px;
-  resize: vertical;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.22);
-  color: var(--text);
-  padding: 12px;
-  outline: none;
-  line-height: 1.45;
-}
-textarea:focus{
-  border-color: rgba(215,192,138,.35);
-  box-shadow: 0 0 0 4px rgba(215,192,138,.10);
-}
-
-/* =========================
-   Rows layout
-   ========================= */
-.row{
-  display: grid;
-  grid-template-columns: 72px 1fr;
-  align-items: center;
-  column-gap: 12px;
-
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-}
-.row:last-of-type{ border-bottom: none; }
-
-.label{
-  color: var(--muted);
-  font-weight: 650;
-  white-space: nowrap;
-}
-
-/* Conteneur outils à droite */
-.rowRight{
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-}
-
-/* Label "Nom :" */
-.inputLabel{
-  color: var(--muted);
-  font-weight: 650;
-  font-size: 0.95rem;
-  margin-left: 6px;
-  white-space: nowrap;
-}
-
-/* Inputs */
-input[type="text"]{
-  width: 160px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.22);
-  color: var(--text);
-  padding: .55rem .7rem;
-  outline: none;
-}
-input[type="text"]:focus{
-  border-color: rgba(215,192,138,.35);
-  box-shadow: 0 0 0 4px rgba(215,192,138,.10);
-}
-.rowRight input[type="text"]{ width: 150px; }
-
-/* Switch dans la row "Premier message = IA" */
-.row:has(#startsAI) > .switch{
-  justify-self: end;
-}
-
-/* =========================
-   Dots
-   ========================= */
-.colorDot{
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.25);
-  background: rgba(10,12,14,.82);
-  cursor: pointer;
-  padding: 0;
-}
-
-.bubbleDot{
-  width: 18px;
-  height: 18px;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,.25);
-  background: rgba(255,255,255,.62);
-  cursor: pointer;
-  padding: 0;
-}
-
-/* =========================
-   Mobile tweaks (FIXED)
-   ========================= */
-@media (max-width: 640px){
-  .row{
-    grid-template-columns: 110px 1fr;
-    column-gap: 10px;
-  }
-
-  .rowRight{ gap: 8px; }
-
-  .colorDot,
-  .bubbleDot{
-    width: 30px;
-    height: 30px;
-    flex-shrink: 0;
-  }
-
-  .bubbleDot{ border-radius: 10px; }
-
-  .inputLabel{
-    font-size: .82rem;
-    margin-left: 4px;
-  }
-
-  .rowRight input[type="text"]{ width: 120px; }
-}
-
-/* =========================
-   Palette
-   ========================= */
-.palette{
-  position: absolute;
-  z-index: 999;
-  background: rgba(20,22,26,.96);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 14px;
-  padding: 10px;
-  box-shadow: 0 18px 50px rgba(0,0,0,.45);
-  display: grid;
-  grid-template-columns: repeat(4, 22px);
-  gap: 10px;
-}
-
-.swatch{
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.18);
-  cursor: pointer;
-  padding: 0;
-}
-.swatch.isActive{
-  outline: 2px solid rgba(215,192,138,.70);
-  outline-offset: 2px;
-}
-
-/* =========================
-   Switch (menu & bubble tools)
-   ========================= */
-.switch{
-  position: relative;
-  width: 50px;
-  height: 28px;
-  display: inline-block;
-  -webkit-tap-highlight-color: transparent;
-}
-.switch input{
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.slider{
-  position: absolute;
-  inset: 0;
-  background: rgba(255,255,255,.14);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 999px;
-  cursor: pointer;
-  transition: .18s ease;
-}
-.slider:before{
-  content: "";
-  position: absolute;
-  width: 22px;
-  height: 22px;
-  top: 2px;
-  left: 3px;
-  background: rgba(255,255,255,.86);
-  border-radius: 999px;
-  transition: .18s ease;
-}
-.switch input:checked + .slider{
-  background: rgba(215,192,138,.26);
-  border-color: rgba(215,192,138,.35);
-}
-.switch input:checked + .slider:before{
-  transform: translateX(22px);
-}
-
-/* =========================
-   Buttons
-   ========================= */
-.buttons{
-  display: flex;
-  gap: 10px;
-  padding-top: 12px;
-}
-
-.btn{
-  flex: 1;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.06);
-  color: var(--text);
-  padding: .7rem .9rem;
-  border-radius: 14px;
-  cursor: pointer;
-  font-weight: 750;
-}
-.btn.primary{
-  background: rgba(215,192,138,.18);
-  border-color: rgba(215,192,138,.28);
-}
-
-.meta{
-  margin-top: 10px;
-  color: var(--muted);
-  font-size: .9rem;
-}
-
-/* =========================
-   Output / Pages
-   ========================= */
-.output{ padding: 14px 0 22px; }
-
-.pages{
-  display: grid;
-  gap: 18px;
-  justify-items: center;
-}
-
-.pageSpacer{
-  width: calc(var(--page-w) * var(--page-scale));
-  height: calc(var(--page-h) * var(--page-scale));
-  position: relative;
-}
-
+/* =========================================================
+   PAGE
+   ========================================================= */
 .page{
   width: var(--page-w);
   height: var(--page-h);
-  position: absolute;
-  top: 0;
-  left: 0;
   border-radius: 18px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,.12);
-  box-shadow: 0 22px 70px rgba(0,0,0,.42);
   transform: scale(var(--page-scale));
   transform-origin: top left;
 }
@@ -430,21 +101,16 @@ input[type="text"]:focus{
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(900px 520px at 30% 15%, rgba(255,255,255,.55), transparent 58%),
-    radial-gradient(900px 620px at 70% 35%, rgba(255,255,255,.38), transparent 62%),
     linear-gradient(180deg, var(--paperA), var(--paperB));
 }
 
-.page .paper:after{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: var(--theme-img);
-  background-size: cover;
-  background-repeat: no-repeat;
+.page .paper::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: var(--theme-img) center / cover no-repeat;
   opacity: var(--theme-img-opacity);
-  mix-blend-mode: var(--theme-img-blend);
-  pointer-events: none;
+  pointer-events:none;
 }
 
 .page .content{
@@ -456,218 +122,51 @@ input[type="text"]:focus{
   gap: var(--stack-gap);
 }
 
-/* =========================
-   Bubbles (FIX: no center drift)
-   - On garde tes marges : c'est le padding du content
-   - On aligne les bulles via align-self
-   ========================= */
+/* =========================================================
+   BUBBLES
+   ========================================================= */
 .bubble{
-  position: relative;
-  display: inline-block;
-  width: fit-content;
   max-width: min(86%, 680px, 50ch);
-
-  background: var(--bubble-bg);
-  color: var(--bubble-text);
   border-radius: 12px;
   padding: 16px var(--bubble-pad-x) 18px;
-  border: 1px solid var(--bubble-border);
-
   font-size: var(--bubble-font);
   line-height: var(--bubble-line);
-
-  /* ✅ plus de centrage */
-  margin: 0;
+  border: 1px solid;
 }
 
-/* Supa (left) */
 .bubble.left{
-  --bubble-bg: var(--bubble-bg-supa);
-  --bubble-text: var(--bubble-text-supa);
-  --bubble-border: var(--bubble-border-supa);
-
-  align-self: flex-start; /* ✅ collé à gauche (avec la marge de page) */
+  align-self: flex-start;
+  background: var(--bubble-bg-supa);
+  color: var(--bubble-text-supa);
+  border-color: var(--bubble-border-supa);
 }
 
-/* Moi (right) */
 .bubble.right{
-  --bubble-bg: var(--bubble-bg-me);
-  --bubble-text: var(--bubble-text-me);
-  --bubble-border: var(--bubble-border-me);
-
-  align-self: flex-end; /* ✅ collé à droite (avec la marge de page) */
+  align-self: flex-end;
+  background: var(--bubble-bg-me);
+  color: var(--bubble-text-me);
+  border-color: var(--bubble-border-me);
 }
 
-/* Name */
+/* Names */
 .bubbleName{
-  font-weight: 600;
   font-size: .92em;
+  font-weight: 600;
   margin-bottom: 6px;
   opacity: .92;
-  color: var(--name-color, rgba(10,12,14,.82));
 }
+.bubble.left .bubbleName{ color: var(--name-color-supa); }
+.bubble.right .bubbleName{ color: var(--name-color-me); text-align:right; }
 
-.bubble.left .bubbleName{
-  --name-color: var(--name-color-supa);
-  text-align: left;
+/* =========================================================
+   EXPORT
+   ========================================================= */
+body.exporting .page{
+  transform: none !important;
+  border: none !important; /* ❌ plus de liseré blanc */
 }
-.bubble.right .bubbleName{
-  --name-color: var(--name-color-me);
-  text-align: right;
-}
-
-/* Text */
-.bubble p{
-  margin: 0;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.bubble.right p{ text-align: left; }
-
-.bubble p em{ font-style: italic; opacity: .92; }
-.bubble p strong{ font-weight: 800; letter-spacing: .15px; }
-
-/* Bubble tools */
-.bubbleTools{
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  z-index: 3;
-}
-
-/* Toggle inside bubbles: OFF visible */
-.bubbleTools .switch{
-  width: 54px;
-  height: 30px;
-}
-
-.bubbleTools .slider{
-  background: rgba(0,0,0,.16);
-  border: 1px solid rgba(0,0,0,.22);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
-}
-
-.bubbleTools .slider:before{
-  width: 22px;
-  height: 22px;
-  top: 3px;
-  left: 3px;
-  background: rgba(255,255,255,.98);
-  border: 1px solid rgba(0,0,0,.22);
-  box-shadow: 0 6px 16px rgba(0,0,0,.35);
-}
-
-.bubbleTools .switch input:checked + .slider{
-  background: rgba(215,192,138,.48);
-  border-color: rgba(215,192,138,.60);
-}
-
-.bubbleTools .switch input:checked + .slider:before{
-  transform: translateX(24px);
-}
-
-/* =========================
-   Export mode
-   ========================= */
 body.exporting .controls,
 body.exporting .hero,
 body.exporting .bubbleTools{
-  display: none !important;
-}
-
-body.exporting .output{ padding-top: 0 !important; }
-body.exporting .page{ transform: none !important; box-shadow: none !important; }
-body.exporting .pageSpacer{ width: var(--page-w) !important; height: var(--page-h) !important; }
-
-/* =========================
-   Mobile export panel
-   ========================= */
-.exportPanel{
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.6);
-  display: grid;
-  place-items: center;
-  padding: 16px;
-  z-index: 9999;
-}
-
-.exportPanelCard{
-  width: min(520px, 100%);
-  background: rgba(20,22,26,.95);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 16px;
-  padding: 14px;
-}
-
-.exportPanelTitle{
-  font-weight: 850;
-  margin-bottom: 6px;
-}
-
-.exportPanelHint{
-  color: rgba(255,255,255,.72);
-  font-size: .92rem;
-  line-height: 1.35;
-  margin-bottom: 10px;
-}
-
-.exportLinks{
-  display: grid;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.exportLinks a{
-  display: block;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.06);
-  color: rgba(255,255,255,.92);
-  text-decoration: none;
-  font-weight: 750;
-}
-
-/* =========================
-   Theme emoji pills (glyph only)
-   ========================= */
-.themePills{
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 10px;
-}
-
-.pill{
-  all: unset;
-  display: grid;
-  place-items: center;
-
-  font-size: 22px;
-  line-height: 1;
-
-  cursor: pointer;
-  user-select: none;
-
-  /* ❌ plus de fond, plus de bordure */
-  background: none;
-  border: none;
-
-  transition: transform .12s ease, filter .12s ease, opacity .12s ease;
-}
-
-.pill:hover{
-  transform: scale(1.12);
-  filter: drop-shadow(0 0 6px rgba(215,192,138,.55));
-}
-
-.pill:active{
-  transform: scale(0.95);
-}
-
-.pill.isActive{
-  filter: drop-shadow(0 0 10px rgba(215,192,138,.75));
-}
-.pill.isActive{
-  transform: scale(1.18);
+  display:none !important;
 }
