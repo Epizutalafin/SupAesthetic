@@ -154,12 +154,32 @@ textarea:focus{
 
 .label{ color: var(--muted); font-weight: 650; }
 
+/* Row layout : label + tools */
+.row{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Conteneur des outils (pastilles + nom) */
 .rowRight{
   display: flex;
   align-items: center;
   gap: 10px;
-  justify-content: flex-start;
-  width: 240px;
+  margin-left: 6px; /* rapproche des labels */
+}
+
+/* Label "Nom" */
+.inputLabel{
+  color: var(--muted);
+  font-weight: 600;
+  font-size: .85rem;
+  margin-left: 6px;
+}
+
+/* Input Supa */
+.rowRight input[type="text"]{
+  width: 150px;
 }
 
 @media (max-width: 640px){
@@ -201,8 +221,33 @@ input[type="text"]:focus{
 }
 
 @media (max-width: 640px){
-  .colorDot{ width: 30px; height: 30px; }
-  .bubbleDot{ width: 30px; height: 30px; border-radius: 10px; }
+  .row{
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+
+  .rowRight{
+    gap: 8px;
+  }
+
+  .colorDot,
+  .bubbleDot{
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;   /* 🔥 empêche l’écrasement */
+  }
+
+  .bubbleDot{
+    border-radius: 10px;
+  }
+
+  .inputLabel{
+    display: none; /* mobile : plus clean */
+  }
+
+  .rowRight input[type="text"]{
+    width: 120px;
+  }
 }
 
 /* Palette */
