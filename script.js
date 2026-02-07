@@ -780,45 +780,45 @@ async function exportAllPagesPNG() {
   const mobileItems = [];
   const isMobile = isMobileLike();
 
-  for (let i = 0; i < pages.length; i++) {
-    const node = pages[i];
-    const exportH = getExportHeightForPage(node, i, pages.length);
+  try {
+    for (let i = 0; i < pages.length; i++) {
+      const node = pages[i];
+      const exportH = getExportHeightForPage(node, i, pages.length);
 
-    const bigCanvas = await html2canvas(node, {
-      backgroundColor: null,
-      width: EXPORT_W,
-      height: exportH,              // ✅ hauteur dynamique ici
-      scale: PNG_RENDER_SCALE,
-      useCORS: true,
-    });
+      const bigCanvas = await html2canvas(node, {
+        backgroundColor: null,
+        width: EXPORT_W,
+        height: exportH,
+        scale: PNG_RENDER_SCALE,
+        useCORS: true,
+      });
 
-    const finalCanvas =
-      PNG_RENDER_SCALE === 1
-        ? bigCanvas
-        : downscaleCanvas(bigCanvas, EXPORT_W, exportH); // ✅ downscale à la même hauteur
+      const finalCanvas =
+        PNG_RENDER_SCALE === 1
+          ? bigCanvas
+          : downscaleCanvas(bigCanvas, EXPORT_W, exportH);
 
-    const filename = `rp_page_${String(i + 1).padStart(2, "0")}.png`;
+      const filename = `rp_page_${String(i + 1).padStart(2, "0")}.png`;
 
-    if (isMobile) {
-      const url = await canvasToObjectURL(finalCanvas);
-      if (url) mobileItems.push({ url, filename });
-    } else {
-      finalCanvas.toBlob((blob) => {
-        if (!blob) return;
-        const url = URL.createObjectURL(blob);
-        downloadURL(url, filename);
-        setTimeout(() => URL.revokeObjectURL(url), 4000);
-      }, "image/png");
+      if (isMobile) {
+        const url = await canvasToObjectURL(finalCanvas);
+        if (url) mobileItems.push({ url, filename });
+      } else {
+        finalCanvas.toBlob((blob) => {
+          if (!blob) return;
+          const url = URL.createObjectURL(blob);
+          downloadURL(url, filename);
+          setTimeout(() => URL.revokeObjectURL(url), 4000);
+        }, "image/png");
 
-      await wait(120);
+        await wait(120);
+      }
     }
+  } finally {
+    // ✅ garanti même si html2canvas plante
+    document.body.classList.remove("exporting");
   }
 
-  document.body.classList.remove("exporting");
-  if (isMobile && mobileItems.length) openExportPanel(mobileItems);
-}
-
-  document.body.classList.remove("exporting");
   if (isMobile && mobileItems.length) openExportPanel(mobileItems);
 }
 
