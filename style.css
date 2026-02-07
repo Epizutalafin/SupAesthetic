@@ -470,7 +470,7 @@ input[type="text"]:focus{
   background: var(--bubble-bg);
   color: var(--bubble-text);
   border-radius: 12px;
-  padding: var(--bubble-pad-y) var(--bubble-pad-x);
+  padding: 16px var(--bubble-pad-x) 18px;
   border: 1px solid var(--bubble-border);
 
   font-size: var(--bubble-font);
@@ -502,7 +502,7 @@ input[type="text"]:focus{
 .bubbleName{
   font-weight: 600;
   font-size: .92em;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   opacity: .92;
   color: var(--name-color, rgba(10,12,14,.82));
 }
