@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SupAesthetic</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="shell">
+    <header class="hero">
+      <div class="heroTitle">
+        <div class="logo">✦</div>
+        <div>
+          <div class="h1">SupAesthetic</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="controls">
+      <div class="controlsGrid">
+        <div class="block">
+          <div class="blockTitle">Texte</div>
+          <textarea
+            id="inputText"
+            placeholder="Colle ici ta conversation…
+
+• 1 bulle = 1 bloc
+• Sépare les bulles par UNE ligne vide
+• Si tu colles depuis Supafriends : italique / gras sont conservés"
+          ></textarea>
+        </div>
+
+        <div class="block">
+          <div class="blockTitle">Réglages</div>
+
+          <div class="row">
+            <label class="label" for="supaName">Supa</label>
+            <div class="rowRight">
+              <button id="supaColorBtn" class="colorDot" type="button" aria-label="Couleur du nom du Supa"></button>
+              <button id="supaBubbleBtn" class="bubbleDot" type="button" aria-label="Style des bulles du Supa"></button>
+              <input id="supaName" type="text" placeholder="Ex : Lui" value="Supa" />
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="label">“Moi”</label>
+            <div class="rowRight">
+              <button id="meColorBtn" class="colorDot" type="button" aria-label="Couleur du nom Moi"></button>
+              <button id="meBubbleBtn" class="bubbleDot" type="button" aria-label="Style des bulles de Moi"></button>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="label">Thème</label>
+            <div class="themePills" id="themePills">
+              <button class="pill isActive" data-theme="classic" type="button">Classique</button>
+              <button class="pill" data-theme="constellation" type="button">Constellation</button>
+              <button class="pill" data-theme="tarot" type="button">Tarot</button>
+              <button class="pill" data-theme="custom" type="button">Custom</button>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <label class="label">Premier message = IA</label>
+            <label class="switch">
+              <input id="startsAI" type="checkbox" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="buttons">
+            <button id="btnGenerate" class="btn" type="button">Générer</button>
+            <button id="btnExport" class="btn primary" type="button">Exporter PNG</button>
+          </div>
+
+          <div class="meta">
+            <span id="pageCount">0 page</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="output">
+      <div id="pages" class="pages"></div>
+    </section>
+  </div>
+
+  <!-- Panel export mobile -->
+  <div id="exportPanel" class="exportPanel" hidden>
+    <div class="exportPanelCard">
+      <div class="exportPanelTitle">Téléchargement</div>
+      <div class="exportPanelHint">
+        Sur téléphone, le navigateur peut bloquer les téléchargements multiples.
+        Tape chaque lien pour télécharger l’image correspondante.
+      </div>
+      <div id="exportLinks" class="exportLinks"></div>
+      <button id="exportClose" class="btn" type="button">Fermer</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
