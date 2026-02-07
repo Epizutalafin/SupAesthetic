@@ -83,11 +83,10 @@
 }
 
 :root[data-theme="marbrenoir"]{
-  --paperA: #0f0f12; /* fallback discret */
+  --paperA: #0f0f12;
   --paperB: #0b0b0e;
 
-  /* --theme-img: url("themes/marbrenoir.webp"); */
-
+  /* --theme-img: url("themes/marbrenoir.webp");
   --theme-img-opacity: 1;
   --theme-img-blend: normal;
 }
