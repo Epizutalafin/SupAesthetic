@@ -465,7 +465,7 @@ input[type="text"]:focus{
   position: relative;
   display: inline-block;
   width: fit-content;
-  max-width: min(86%, 680px, 45ch);
+  max-width: min(86%, 680px, 50ch);
 
   background: var(--bubble-bg);
   color: var(--bubble-text);
