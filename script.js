@@ -727,49 +727,100 @@ els.exportPanel?.addEventListener("click", (e) => {
   if (e.target === els.exportPanel) closeExportPanel();
 });
 
-/* ===== Auto-crop helpers (content-based) ===== */
-const CROP_BOTTOM_BREATH = 64;     // air en bas (px)
+/* ===== Auto-crop helpers (content-based + rounded corners) ===== */
+const CROP_TOP_BREATH = 64;       // air au-dessus de la 1ère bulle (px)
+const CROP_BOTTOM_BREATH = 64;    // air en bas (px)
 const CROP_MIN_H = 520;           // hauteur mini (évite un PNG trop "tassé")
 const CROP_FREE_MIN = 220;        // si on a au moins ça de vide, on rogne
+const PAGE_RADIUS = 18;           // doit matcher .page { border-radius: 18px; }
 
-function measureUsedHeight(pageEl) {
-  // On mesure jusqu’au bas de la dernière bulle (en tenant compte du translateY éventuel)
+/** Mesure le rectangle utile (top/bottom) dans la page, en px (non-scalé) */
+function measureUsedBounds(pageEl) {
   const content = pageEl.querySelector(".content");
-  if (!content) return EXPORT_H;
+  if (!content) return { top: 0, height: EXPORT_H };
 
   const bubbles = content.querySelectorAll(".bubble");
-  if (!bubbles.length) return EXPORT_H;
-
-  const last = bubbles[bubbles.length - 1];
+  if (!bubbles.length) return { top: 0, height: EXPORT_H };
 
   const pageRect = pageEl.getBoundingClientRect();
-  const lastRect = last.getBoundingClientRect();
+  const firstRect = bubbles[0].getBoundingClientRect();
+  const lastRect = bubbles[bubbles.length - 1].getBoundingClientRect();
 
-  // bas de la dernière bulle, relatif au haut de la page
-  const used = (lastRect.bottom - pageRect.top) + CROP_BOTTOM_BREATH;
+  // bounds relatifs au haut de la page
+  let top = (firstRect.top - pageRect.top) - CROP_TOP_BREATH;
+  let bottom = (lastRect.bottom - pageRect.top) + CROP_BOTTOM_BREATH;
 
-  // clamp raisonnable
-  return Math.max(CROP_MIN_H, Math.min(EXPORT_H, Math.ceil(used)));
+  top = Math.max(0, Math.floor(top));
+  bottom = Math.min(EXPORT_H, Math.ceil(bottom));
+
+  let height = Math.max(CROP_MIN_H, bottom - top);
+  if (top + height > EXPORT_H) {
+    // si ça déborde, on remonte un peu le top
+    top = Math.max(0, EXPORT_H - height);
+  }
+
+  return { top, height };
 }
 
-function getExportHeightForPage(pageEl, pageIndex, totalPages) {
-  // On rogne si :
-  // - page unique
-  // - OU dernière page
+function getCropForPage(pageEl, pageIndex, totalPages) {
   const isOnly = totalPages === 1;
   const isLast = pageIndex === totalPages - 1;
 
-  if (!isOnly && !isLast) return EXPORT_H;
+  if (!isOnly && !isLast) return { top: 0, height: EXPORT_H };
 
-  const usedH = measureUsedHeight(pageEl);
-  const free = EXPORT_H - usedH;
+  const { top, height } = measureUsedBounds(pageEl);
+  const free = EXPORT_H - height;
 
-  // Si la page est quasi pleine, on ne rogne pas (évite les différences inutiles)
-  if (free < CROP_FREE_MIN) return EXPORT_H;
+  // si quasi plein, pas la peine de crop (évite des tailles random)
+  if (free < CROP_FREE_MIN) return { top: 0, height: EXPORT_H };
 
-  return usedH;
+  return { top, height };
 }
 
+/** Dessine un rectangle arrondi (helper) */
+function roundedRectPath(ctx, x, y, w, h, r) {
+  const rr = Math.max(0, Math.min(r, w / 2, h / 2));
+  ctx.beginPath();
+  ctx.moveTo(x + rr, y);
+  ctx.arcTo(x + w, y, x + w, y + h, rr);
+  ctx.arcTo(x + w, y + h, x, y + h, rr);
+  ctx.arcTo(x, y + h, x, y, rr);
+  ctx.arcTo(x, y, x + w, y, rr);
+  ctx.closePath();
+}
+
+/**
+ * Croppe une zone (top/height) dans un canvas hi-res (déjà rendu par html2canvas),
+ * puis renvoie un canvas "final" en taille export (832 x cropH) avec coins arrondis.
+ */
+function cropAndRoundFromHiRes(bigCanvas, cropTop, cropH, scale) {
+  const srcY = Math.round(cropTop * scale);
+  const srcH = Math.round(cropH * scale);
+  const srcW = Math.round(EXPORT_W * scale);
+
+  // canvas hi-res croppé
+  const hi = document.createElement("canvas");
+  hi.width = srcW;
+  hi.height = srcH;
+  hi.getContext("2d").drawImage(bigCanvas, 0, srcY, srcW, srcH, 0, 0, srcW, srcH);
+
+  // downscale vers taille finale + masque arrondi
+  const out = document.createElement("canvas");
+  out.width = EXPORT_W;
+  out.height = cropH;
+
+  const ctx = out.getContext("2d", { alpha: true });
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+
+  roundedRectPath(ctx, 0, 0, out.width, out.height, PAGE_RADIUS);
+  ctx.clip();
+
+  ctx.drawImage(hi, 0, 0, out.width, out.height);
+  return out;
+}
+
+/* ===== Export PNG ===== */
 async function exportAllPagesPNG() {
   const pages = [...document.querySelectorAll(".page")];
   if (!pages.length) return;
@@ -780,45 +831,39 @@ async function exportAllPagesPNG() {
   const mobileItems = [];
   const isMobile = isMobileLike();
 
-  try {
-    for (let i = 0; i < pages.length; i++) {
-      const node = pages[i];
-      const exportH = getExportHeightForPage(node, i, pages.length);
+  for (let i = 0; i < pages.length; i++) {
+    const node = pages[i];
+    const { top: cropTop, height: cropH } = getCropForPage(node, i, pages.length);
 
-      const bigCanvas = await html2canvas(node, {
-        backgroundColor: null,
-        width: EXPORT_W,
-        height: exportH,
-        scale: PNG_RENDER_SCALE,
-        useCORS: true,
-      });
+    // 1) on rend TOUJOURS la page complète, pour que le fond + coins soient cohérents
+    const bigCanvas = await html2canvas(node, {
+      backgroundColor: null,
+      width: EXPORT_W,
+      height: EXPORT_H,
+      scale: PNG_RENDER_SCALE,
+      useCORS: true,
+    });
 
-      const finalCanvas =
-        PNG_RENDER_SCALE === 1
-          ? bigCanvas
-          : downscaleCanvas(bigCanvas, EXPORT_W, exportH);
+    // 2) on croppe en post-process + on remet les coins arrondis
+    const finalCanvas = cropAndRoundFromHiRes(bigCanvas, cropTop, cropH, PNG_RENDER_SCALE);
 
-      const filename = `rp_page_${String(i + 1).padStart(2, "0")}.png`;
+    const filename = `rp_page_${String(i + 1).padStart(2, "0")}.png`;
 
-      if (isMobile) {
-        const url = await canvasToObjectURL(finalCanvas);
-        if (url) mobileItems.push({ url, filename });
-      } else {
-        finalCanvas.toBlob((blob) => {
-          if (!blob) return;
-          const url = URL.createObjectURL(blob);
-          downloadURL(url, filename);
-          setTimeout(() => URL.revokeObjectURL(url), 4000);
-        }, "image/png");
-
-        await wait(120);
-      }
+    if (isMobile) {
+      const url = await canvasToObjectURL(finalCanvas);
+      if (url) mobileItems.push({ url, filename });
+    } else {
+      finalCanvas.toBlob((blob) => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        downloadURL(url, filename);
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+      }, "image/png");
+      await wait(120);
     }
-  } finally {
-    // ✅ garanti même si html2canvas plante
-    document.body.classList.remove("exporting");
   }
 
+  document.body.classList.remove("exporting");
   if (isMobile && mobileItems.length) openExportPanel(mobileItems);
 }
 
