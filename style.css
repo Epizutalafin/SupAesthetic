@@ -65,7 +65,7 @@
   --theme-img-opacity: .00;
   --theme-img-blend: multiply;
 }
-:root[data-theme="marbreNoir"] {
+:root[data-theme="marbrenoir"] {
   --paperA: #0f0f12; /* fallback discret */
   --paperB: #0b0b0e;
 
