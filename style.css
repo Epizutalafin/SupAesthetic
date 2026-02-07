@@ -154,14 +154,17 @@ textarea:focus{
 
 .label{ color: var(--muted); font-weight: 650; }
 
-..rowRight{
+.rowRight{
   display: flex;
   align-items: center;
   gap: 10px;
-  justify-content: flex-start; /* ✅ plus collé à gauche */
-  min-width: 240px;            /* ✅ même “colonne” que Supa (mobile inclus) */
+  justify-content: flex-start;
+  width: 240px;
 }
-ght{ display: flex; align-items: center; gap: 10px; }
+
+@media (max-width: 640px){
+  .rowRight{ width: 220px; }
+}
 
 input[type="text"]{
   width: 160px;
