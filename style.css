@@ -55,7 +55,9 @@
   --bubble-border-me: rgba(255,255,255,.55);
 }
 
-/* Themes */
+/* =========================
+   Themes
+   ========================= */
 :root[data-theme="classic"]{
   --paperA: #f7f1e3;
   --paperB: #fbf7ef;
@@ -73,7 +75,9 @@
 }
 :root[data-theme="custom"]{}
 
-/* Base */
+/* =========================
+   Base
+   ========================= */
 *{ box-sizing: border-box; }
 html, body{ height: 100%; }
 [hidden]{ display: none !important; }
@@ -94,9 +98,16 @@ body{
   padding: 14px;
 }
 
-/* Header */
+/* =========================
+   Header
+   ========================= */
 .hero{ padding: 6px 2px 12px; }
-.heroTitle{ display: flex; align-items: center; gap: 10px; }
+
+.heroTitle{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
 .logo{
   width: 40px;
@@ -110,10 +121,21 @@ body{
   font-size: 1.2rem;
 }
 
-.h1{ font-weight: 850; letter-spacing: .2px; font-size: 1.55rem; line-height: 1.1; }
-.h2{ color: var(--muted); font-size: .92rem; margin-top: 2px; }
+.h1{
+  font-weight: 850;
+  letter-spacing: .2px;
+  font-size: 1.55rem;
+  line-height: 1.1;
+}
+.h2{
+  color: var(--muted);
+  font-size: .92rem;
+  margin-top: 2px;
+}
 
-/* Controls */
+/* =========================
+   Controls panel
+   ========================= */
 .controls{
   background: var(--panel);
   border: 1px solid var(--line);
@@ -141,6 +163,7 @@ body{
   color: rgba(255,255,255,.88);
 }
 
+/* Textarea */
 textarea{
   width: 100%;
   min-height: 260px;
@@ -153,44 +176,49 @@ textarea{
   outline: none;
   line-height: 1.45;
 }
-
 textarea:focus{
   border-color: rgba(215,192,138,.35);
   box-shadow: 0 0 0 4px rgba(215,192,138,.10);
 }
 
+/* =========================
+   Rows layout
+   ========================= */
 .row{
-  display: flex;
+  display: grid;
+  grid-template-columns: max-content 1fr;
   align-items: center;
-  justify-content: space-between;
-  gap: 14px;
+  column-gap: 12px;
+
   padding: 10px 0;
   border-bottom: 1px solid rgba(255,255,255,.08);
 }
 .row:last-of-type{ border-bottom: none; }
 
-.label{ color: var(--muted); font-weight: 650; }
+.label{
+  color: var(--muted);
+  font-weight: 650;
+}
 
+/* Conteneur outils à droite (pastilles + Nom + input) */
 .rowRight{
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 10px;
-  margin-left: 6px;
+  width: auto;
 }
 
+/* Label "Nom :" (visible aussi sur mobile) */
 .inputLabel{
   color: var(--muted);
   font-weight: 600;
   font-size: .85rem;
   margin-left: 6px;
+  white-space: nowrap;
 }
 
-.rowRight input[type="text"]{ width: 150px; }
-
-@media (max-width: 640px){
-  .rowRight{ width: 220px; }
-}
-
+/* Inputs */
 input[type="text"]{
   width: 160px;
   border-radius: 12px;
@@ -205,7 +233,17 @@ input[type="text"]:focus{
   box-shadow: 0 0 0 4px rgba(215,192,138,.10);
 }
 
-/* Dots */
+/* Ajuste le champ "Supa name" un peu plus compact */
+.rowRight input[type="text"]{ width: 150px; }
+
+/* Switch dans une row: à droite proprement */
+.row > .switch{
+  justify-self: end;
+}
+
+/* =========================
+   Dots
+   ========================= */
 .colorDot{
   width: 18px;
   height: 18px;
@@ -226,8 +264,13 @@ input[type="text"]:focus{
   padding: 0;
 }
 
+/* =========================
+   Mobile tweaks
+   ========================= */
 @media (max-width: 640px){
-  .row{ flex-wrap: nowrap; gap: 10px; }
+  /* On réduit un peu les écarts */
+  .row{ column-gap: 10px; }
+
   .rowRight{ gap: 8px; }
 
   .colorDot,
@@ -238,11 +281,19 @@ input[type="text"]:focus{
   }
 
   .bubbleDot{ border-radius: 10px; }
-  .inputLabel{ display: none; }
+
+  /* Le label "Nom :" reste visible mais plus discret */
+  .inputLabel{
+    font-size: .82rem;
+    margin-left: 4px;
+  }
+
   .rowRight input[type="text"]{ width: 120px; }
 }
 
-/* Palette */
+/* =========================
+   Palette
+   ========================= */
 .palette{
   position: absolute;
   z-index: 999;
@@ -269,7 +320,9 @@ input[type="text"]:focus{
   outline-offset: 2px;
 }
 
-/* Switch (menu & bubble tools) */
+/* =========================
+   Switch (menu & bubble tools)
+   ========================= */
 .switch{
   position: relative;
   width: 50px;
@@ -309,10 +362,18 @@ input[type="text"]:focus{
   background: rgba(215,192,138,.26);
   border-color: rgba(215,192,138,.35);
 }
-.switch input:checked + .slider:before{ transform: translateX(22px); }
+.switch input:checked + .slider:before{
+  transform: translateX(22px);
+}
 
-/* Buttons */
-.buttons{ display: flex; gap: 10px; padding-top: 12px; }
+/* =========================
+   Buttons
+   ========================= */
+.buttons{
+  display: flex;
+  gap: 10px;
+  padding-top: 12px;
+}
 
 .btn{
   flex: 1;
@@ -329,11 +390,22 @@ input[type="text"]:focus{
   border-color: rgba(215,192,138,.28);
 }
 
-.meta{ margin-top: 10px; color: var(--muted); font-size: .9rem; }
+.meta{
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: .9rem;
+}
 
-/* Output */
+/* =========================
+   Output / Pages
+   ========================= */
 .output{ padding: 14px 0 22px; }
-.pages{ display: grid; gap: 18px; justify-items: center; }
+
+.pages{
+  display: grid;
+  gap: 18px;
+  justify-items: center;
+}
 
 .pageSpacer{
   width: calc(var(--page-w) * var(--page-scale));
@@ -385,7 +457,9 @@ input[type="text"]:focus{
   gap: var(--stack-gap);
 }
 
-/* Bubble */
+/* =========================
+   Bubbles
+   ========================= */
 .bubble{
   position: relative;
   display: inline-block;
@@ -418,6 +492,7 @@ input[type="text"]:focus{
   transform: translateX(calc( 1 * var(--gutter) / 2));
 }
 
+/* Name */
 .bubbleName{
   font-weight: 600;
   font-size: .92em;
@@ -435,7 +510,12 @@ input[type="text"]:focus{
   text-align: right;
 }
 
-.bubble p{ margin: 0; white-space: pre-wrap; word-break: break-word; }
+/* Text */
+.bubble p{
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
 .bubble.right p{ text-align: right; }
 
 .bubble p em{ font-style: italic; opacity: .92; }
@@ -450,7 +530,10 @@ input[type="text"]:focus{
 }
 
 /* Toggle inside bubbles: OFF visible */
-.bubbleTools .switch{ width: 54px; height: 30px; }
+.bubbleTools .switch{
+  width: 54px;
+  height: 30px;
+}
 
 .bubbleTools .slider{
   background: rgba(0,0,0,.16);
@@ -477,16 +560,22 @@ input[type="text"]:focus{
   transform: translateX(24px);
 }
 
-/* Export mode */
+/* =========================
+   Export mode
+   ========================= */
 body.exporting .controls,
 body.exporting .hero,
-body.exporting .bubbleTools{ display: none !important; }
+body.exporting .bubbleTools{
+  display: none !important;
+}
 
 body.exporting .output{ padding-top: 0 !important; }
 body.exporting .page{ transform: none !important; box-shadow: none !important; }
 body.exporting .pageSpacer{ width: var(--page-w) !important; height: var(--page-h) !important; }
 
-/* Mobile export panel */
+/* =========================
+   Mobile export panel
+   ========================= */
 .exportPanel{
   position: fixed;
   inset: 0;
@@ -496,6 +585,7 @@ body.exporting .pageSpacer{ width: var(--page-w) !important; height: var(--page-
   padding: 16px;
   z-index: 9999;
 }
+
 .exportPanelCard{
   width: min(520px, 100%);
   background: rgba(20,22,26,.95);
@@ -503,7 +593,12 @@ body.exporting .pageSpacer{ width: var(--page-w) !important; height: var(--page-
   border-radius: 16px;
   padding: 14px;
 }
-.exportPanelTitle{ font-weight: 850; margin-bottom: 6px; }
+
+.exportPanelTitle{
+  font-weight: 850;
+  margin-bottom: 6px;
+}
+
 .exportPanelHint{
   color: rgba(255,255,255,.72);
   font-size: .92rem;
@@ -511,7 +606,12 @@ body.exporting .pageSpacer{ width: var(--page-w) !important; height: var(--page-
   margin-bottom: 10px;
 }
 
-.exportLinks{ display: grid; gap: 8px; margin-bottom: 12px; }
+.exportLinks{
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
 .exportLinks a{
   display: block;
   padding: 10px 12px;
@@ -523,8 +623,15 @@ body.exporting .pageSpacer{ width: var(--page-w) !important; height: var(--page-
   font-weight: 750;
 }
 
-/* Theme pills */
-.themePills{ display: flex; flex-wrap: wrap; gap: 8px; }
+/* =========================
+   Theme pills
+   ========================= */
+.themePills{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .pill{
   padding: .35rem .7rem;
   border-radius: 999px;
@@ -536,6 +643,7 @@ body.exporting .pageSpacer{ width: var(--page-w) !important; height: var(--page-
   cursor: pointer;
   transition: .15s ease;
 }
+
 .pill.isActive{
   background: rgba(215,192,138,.22);
   border-color: rgba(215,192,138,.35);
