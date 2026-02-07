@@ -727,6 +727,49 @@ els.exportPanel?.addEventListener("click", (e) => {
   if (e.target === els.exportPanel) closeExportPanel();
 });
 
+/* ===== Auto-crop helpers (content-based) ===== */
+const CROP_BOTTOM_BREATH = 64;     // air en bas (px)
+const CROP_MIN_H = 520;           // hauteur mini (évite un PNG trop "tassé")
+const CROP_FREE_MIN = 220;        // si on a au moins ça de vide, on rogne
+
+function measureUsedHeight(pageEl) {
+  // On mesure jusqu’au bas de la dernière bulle (en tenant compte du translateY éventuel)
+  const content = pageEl.querySelector(".content");
+  if (!content) return EXPORT_H;
+
+  const bubbles = content.querySelectorAll(".bubble");
+  if (!bubbles.length) return EXPORT_H;
+
+  const last = bubbles[bubbles.length - 1];
+
+  const pageRect = pageEl.getBoundingClientRect();
+  const lastRect = last.getBoundingClientRect();
+
+  // bas de la dernière bulle, relatif au haut de la page
+  const used = (lastRect.bottom - pageRect.top) + CROP_BOTTOM_BREATH;
+
+  // clamp raisonnable
+  return Math.max(CROP_MIN_H, Math.min(EXPORT_H, Math.ceil(used)));
+}
+
+function getExportHeightForPage(pageEl, pageIndex, totalPages) {
+  // On rogne si :
+  // - page unique
+  // - OU dernière page
+  const isOnly = totalPages === 1;
+  const isLast = pageIndex === totalPages - 1;
+
+  if (!isOnly && !isLast) return EXPORT_H;
+
+  const usedH = measureUsedHeight(pageEl);
+  const free = EXPORT_H - usedH;
+
+  // Si la page est quasi pleine, on ne rogne pas (évite les différences inutiles)
+  if (free < CROP_FREE_MIN) return EXPORT_H;
+
+  return usedH;
+}
+
 async function exportAllPagesPNG() {
   const pages = [...document.querySelectorAll(".page")];
   if (!pages.length) return;
@@ -739,17 +782,20 @@ async function exportAllPagesPNG() {
 
   for (let i = 0; i < pages.length; i++) {
     const node = pages[i];
+    const exportH = getExportHeightForPage(node, i, pages.length);
 
     const bigCanvas = await html2canvas(node, {
       backgroundColor: null,
       width: EXPORT_W,
-      height: EXPORT_H,
+      height: exportH,              // ✅ hauteur dynamique ici
       scale: PNG_RENDER_SCALE,
       useCORS: true,
     });
 
     const finalCanvas =
-      PNG_RENDER_SCALE === 1 ? bigCanvas : downscaleCanvas(bigCanvas, EXPORT_W, EXPORT_H);
+      PNG_RENDER_SCALE === 1
+        ? bigCanvas
+        : downscaleCanvas(bigCanvas, EXPORT_W, exportH); // ✅ downscale à la même hauteur
 
     const filename = `rp_page_${String(i + 1).padStart(2, "0")}.png`;
 
@@ -767,6 +813,10 @@ async function exportAllPagesPNG() {
       await wait(120);
     }
   }
+
+  document.body.classList.remove("exporting");
+  if (isMobile && mobileItems.length) openExportPanel(mobileItems);
+}
 
   document.body.classList.remove("exporting");
   if (isMobile && mobileItems.length) openExportPanel(mobileItems);
