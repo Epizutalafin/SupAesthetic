@@ -3,6 +3,7 @@ const EXPORT_H = 1472;
 
 const PREVIEW_MAX_SCALE = 0.62;
 const PNG_RENDER_SCALE = 2.5;
+
 const CENTER_MIN_FREE = 140;
 const CENTER_MAX_SHIFT = 260;
 
@@ -62,7 +63,6 @@ const BUBBLE_CHOICES = [
 const LS_THEME = "supAesthetic_theme";
 const LS_NAME_SUPA = "supAesthetic_nameColor_supa";
 const LS_NAME_ME = "supAesthetic_nameColor_me";
-
 const LS_BUBBLE_SUPA = "supAesthetic_bubbleStyle_supa";
 const LS_BUBBLE_ME = "supAesthetic_bubbleStyle_me";
 
@@ -77,7 +77,6 @@ const els = {
   supaColorBtn: document.getElementById("supaColorBtn"),
   meColorBtn: document.getElementById("meColorBtn"),
 
-  /* ✅ NEW: bubble style buttons (must exist in HTML) */
   supaBubbleBtn: document.getElementById("supaBubbleBtn"),
   meBubbleBtn: document.getElementById("meBubbleBtn"),
 
@@ -123,7 +122,7 @@ function initTheme() {
   pills.forEach((p) => {
     p.classList.toggle("isActive", p.dataset.theme === saved);
     p.addEventListener("click", () => {
-      pills.forEach(x => x.classList.remove("isActive"));
+      pills.forEach((x) => x.classList.remove("isActive"));
       p.classList.add("isActive");
       applyTheme(p.dataset.theme);
     });
@@ -158,7 +157,7 @@ function initNameStyles() {
     const cleaned = (saved || "").trim().replace(/\s+/g, "");
     if (!cleaned) return setNameStyle(which, NAME_CHOICES[0]);
 
-    const match = NAME_CHOICES.find(c => (c.value || "").replace(/\s+/g, "") === cleaned);
+    const match = NAME_CHOICES.find((c) => (c.value || "").replace(/\s+/g, "") === cleaned);
     if (match) return setNameStyle(which, match);
 
     setNameStyle(which, { value: saved });
@@ -179,7 +178,6 @@ function setBubbleStyle(which, choice) {
   const btn = which === "supa" ? els.supaBubbleBtn : els.meBubbleBtn;
   if (btn) {
     btn.style.background = pick.chip || pick.bg;
-    // rendre le carré "dark" visible même si l'UI est sombre
     btn.style.borderColor = "rgba(255,255,255,.25)";
   }
 
@@ -192,7 +190,7 @@ function initBubbleStyles() {
   const load = (which, key) => {
     let saved = "light";
     try { saved = localStorage.getItem(key) || "light"; } catch {}
-    const match = BUBBLE_CHOICES.find(x => x.id === saved) || BUBBLE_CHOICES[0];
+    const match = BUBBLE_CHOICES.find((x) => x.id === saved) || BUBBLE_CHOICES[0];
     setBubbleStyle(which, match);
   };
 
@@ -200,14 +198,13 @@ function initBubbleStyles() {
   load("me", LS_BUBBLE_ME);
 }
 
-/* ===== Palette system (shared) ===== */
+/* ===== Palette system ===== */
 function closePalette() {
   if (!activePaletteEl) return;
   try { activePaletteEl.remove(); } catch {}
   activePaletteEl = null;
 }
 
-/* Palette pour couleurs de NOM */
 function openNamePalette(anchorBtn, which) {
   if (!anchorBtn) return;
   closePalette();
@@ -249,7 +246,6 @@ function openNamePalette(anchorBtn, which) {
   activePaletteEl = pal;
 }
 
-/* Palette pour styles de BULLES */
 function openBubblePalette(anchorBtn, which) {
   if (!anchorBtn) return;
   closePalette();
@@ -303,7 +299,6 @@ function initPalettes() {
 
   els.supaColorBtn?.addEventListener("pointerdown", open(openNamePalette, els.supaColorBtn, "supa"));
   els.meColorBtn?.addEventListener("pointerdown", open(openNamePalette, els.meColorBtn, "me"));
-
   els.supaBubbleBtn?.addEventListener("pointerdown", open(openBubblePalette, els.supaBubbleBtn, "supa"));
   els.meBubbleBtn?.addEventListener("pointerdown", open(openBubblePalette, els.meBubbleBtn, "me"));
 
@@ -395,7 +390,7 @@ els.input?.addEventListener("paste", (e) => {
 function parseBlocks(raw) {
   const cleaned = (raw || "").trim();
   if (!cleaned) return [];
-  return cleaned.split(/\n\s*\n+/g).map(s => s.trim()).filter(Boolean);
+  return cleaned.split(/\n\s*\n+/g).map((s) => s.trim()).filter(Boolean);
 }
 
 function getSupaName() { return (els.supaName?.value || "Supa").trim() || "Supa"; }
@@ -616,7 +611,10 @@ async function exportAllPagesPNG() {
       useCORS: true,
     });
 
-    const finalCanvas = PNG_RENDER_SCALE === 1 ? bigCanvas : downscaleCanvas(bigCanvas, EXPORT_W, EXPORT_H);
+    const finalCanvas = PNG_RENDER_SCALE === 1
+      ? bigCanvas
+      : downscaleCanvas(bigCanvas, EXPORT_W, EXPORT_H);
+
     const filename = `rp_page_${String(i + 1).padStart(2, "0")}.png`;
 
     if (isMobile) {
@@ -636,10 +634,6 @@ async function exportAllPagesPNG() {
   document.body.classList.remove("exporting");
   if (isMobile && mobileItems.length) openExportPanel(mobileItems);
 }
-
-document.querySelectorAll(".bubble").forEach(b => {
-  b.toggleAttribute("data-bubble", pick.id === "dark");
-});
 
 /* ===== Events/init ===== */
 els.btnGenerate?.addEventListener("click", generate);
