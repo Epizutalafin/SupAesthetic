@@ -1,7 +1,9 @@
 :root{
+  /* Export page size */
   --page-w: 832px;
   --page-h: 1472px;
 
+  /* UI colors */
   --bg: #0b0d10;
   --panel: rgba(255,255,255,.06);
   --line: rgba(255,255,255,.10);
@@ -9,37 +11,41 @@
   --muted: rgba(255,255,255,.65);
   --accent: #d7c08a;
 
+  /* Fonts */
   --ui-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Noto Sans", "Liberation Sans", sans-serif;
 
+  /* Paper */
   --paperA: #f7f1e3;
   --paperB: #fbf7ef;
 
+  /* Preview scale */
   --page-scale: 0.60;
 
+  /* Layout */
   --stack-gap: 28px;
   --gutter: 88px;
 
   --content-pad-y: 74px;
   --content-pad-x: 46px;
 
+  /* Bubble typography */
   --bubble-font: 26px;
   --bubble-line: 1.38;
 
+  /* Bubble paddings */
   --bubble-pad-y: 18px;
   --bubble-pad-x: 22px;
 
-  --toggle-track: rgba(158, 74, 64, .55);
-  --toggle-border: rgba(158, 74, 64, .70);
-  --toggle-knob: rgba(255,255,255,.95);
-
+  /* Speaker name colors */
   --name-color-supa: rgba(10,12,14,.82);
   --name-color-me: rgba(10,12,14,.82);
 
+  /* Theme overlay (image) */
   --theme-img: none;
   --theme-img-opacity: .00;
   --theme-img-blend: multiply;
 
-  /* ✅ Bubble styles per speaker (Supa = left, Moi = right) */
+  /* Bubble styles per speaker (Supa = left, Moi = right) */
   --bubble-bg-supa: rgba(255,255,255,.62);
   --bubble-text-supa: rgba(10,12,14,.92);
   --bubble-border-supa: rgba(255,255,255,.55);
@@ -49,6 +55,7 @@
   --bubble-border-me: rgba(255,255,255,.55);
 }
 
+/* Themes */
 :root[data-theme="classic"]{
   --paperA: #f7f1e3;
   --paperB: #fbf7ef;
@@ -69,6 +76,7 @@
 /* Base */
 *{ box-sizing: border-box; }
 html, body{ height: 100%; }
+[hidden]{ display: none !important; }
 
 body{
   margin: 0;
@@ -91,8 +99,10 @@ body{
 .heroTitle{ display: flex; align-items: center; gap: 10px; }
 
 .logo{
-  width: 40px; height: 40px;
-  display: grid; place-items: center;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
   border-radius: 14px;
   background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.10);
@@ -119,10 +129,17 @@ body{
 }
 
 @media (min-width: 900px){
-  .controlsGrid{ grid-template-columns: 1.35fr .65fr; align-items: start; }
+  .controlsGrid{
+    grid-template-columns: 1.35fr .65fr;
+    align-items: start;
+  }
 }
 
-.blockTitle{ font-weight: 750; margin-bottom: 8px; color: rgba(255,255,255,.88); }
+.blockTitle{
+  font-weight: 750;
+  margin-bottom: 8px;
+  color: rgba(255,255,255,.88);
+}
 
 textarea{
   width: 100%;
@@ -146,7 +163,7 @@ textarea:focus{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 14px;
   padding: 10px 0;
   border-bottom: 1px solid rgba(255,255,255,.08);
 }
@@ -154,22 +171,13 @@ textarea:focus{
 
 .label{ color: var(--muted); font-weight: 650; }
 
-/* Row layout : label + tools */
-.row{
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-/* Conteneur des outils (pastilles + nom) */
 .rowRight{
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: 6px; /* rapproche des labels */
+  margin-left: 6px;
 }
 
-/* Label "Nom" */
 .inputLabel{
   color: var(--muted);
   font-weight: 600;
@@ -177,10 +185,7 @@ textarea:focus{
   margin-left: 6px;
 }
 
-/* Input Supa */
-.rowRight input[type="text"]{
-  width: 150px;
-}
+.rowRight input[type="text"]{ width: 150px; }
 
 @media (max-width: 640px){
   .rowRight{ width: 220px; }
@@ -200,9 +205,10 @@ input[type="text"]:focus{
   box-shadow: 0 0 0 4px rgba(215,192,138,.10);
 }
 
-/* Color dot (nom) */
+/* Dots */
 .colorDot{
-  width: 18px; height: 18px;
+  width: 18px;
+  height: 18px;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,.25);
   background: rgba(10,12,14,.82);
@@ -210,10 +216,10 @@ input[type="text"]:focus{
   padding: 0;
 }
 
-/* Bubble dot (style des bulles) */
 .bubbleDot{
-  width: 18px; height: 18px;
-  border-radius: 6px; /* petit carré arrondi, différenciable du rond */
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
   border: 1px solid rgba(255,255,255,.25);
   background: rgba(255,255,255,.62);
   cursor: pointer;
@@ -221,33 +227,19 @@ input[type="text"]:focus{
 }
 
 @media (max-width: 640px){
-  .row{
-    flex-wrap: nowrap;
-    gap: 10px;
-  }
-
-  .rowRight{
-    gap: 8px;
-  }
+  .row{ flex-wrap: nowrap; gap: 10px; }
+  .rowRight{ gap: 8px; }
 
   .colorDot,
   .bubbleDot{
     width: 30px;
     height: 30px;
-    flex-shrink: 0;   /* 🔥 empêche l’écrasement */
+    flex-shrink: 0;
   }
 
-  .bubbleDot{
-    border-radius: 10px;
-  }
-
-  .inputLabel{
-    display: none; /* mobile : plus clean */
-  }
-
-  .rowRight input[type="text"]{
-    width: 120px;
-  }
+  .bubbleDot{ border-radius: 10px; }
+  .inputLabel{ display: none; }
+  .rowRight input[type="text"]{ width: 120px; }
 }
 
 /* Palette */
@@ -265,7 +257,8 @@ input[type="text"]:focus{
 }
 
 .swatch{
-  width: 22px; height: 22px;
+  width: 22px;
+  height: 22px;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,.18);
   cursor: pointer;
@@ -276,12 +269,25 @@ input[type="text"]:focus{
   outline-offset: 2px;
 }
 
-/* Switch (menu) */
-.switch{ position: relative; width: 50px; height: 28px; display: inline-block; -webkit-tap-highlight-color: transparent; }
-.switch input{ position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+/* Switch (menu & bubble tools) */
+.switch{
+  position: relative;
+  width: 50px;
+  height: 28px;
+  display: inline-block;
+  -webkit-tap-highlight-color: transparent;
+}
+.switch input{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
 
 .slider{
-  position: absolute; inset: 0;
+  position: absolute;
+  inset: 0;
   background: rgba(255,255,255,.14);
   border: 1px solid rgba(255,255,255,.12);
   border-radius: 999px;
@@ -291,8 +297,10 @@ input[type="text"]:focus{
 .slider:before{
   content: "";
   position: absolute;
-  width: 22px; height: 22px;
-  top: 2px; left: 3px;
+  width: 22px;
+  height: 22px;
+  top: 2px;
+  left: 3px;
   background: rgba(255,255,255,.86);
   border-radius: 999px;
   transition: .18s ease;
@@ -337,7 +345,8 @@ input[type="text"]:focus{
   width: var(--page-w);
   height: var(--page-h);
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   border-radius: 18px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,.12);
@@ -376,7 +385,7 @@ input[type="text"]:focus{
   gap: var(--stack-gap);
 }
 
-/* Bubble (vars set per side) */
+/* Bubble */
 .bubble{
   position: relative;
   display: inline-block;
@@ -426,14 +435,13 @@ input[type="text"]:focus{
   text-align: right;
 }
 
-.bubble.right p{
-  text-align: right;
-}
-
 .bubble p{ margin: 0; white-space: pre-wrap; word-break: break-word; }
+.bubble.right p{ text-align: right; }
+
 .bubble p em{ font-style: italic; opacity: .92; }
 .bubble p strong{ font-weight: 800; letter-spacing: .15px; }
 
+/* Bubble tools */
 .bubbleTools{
   position: absolute;
   right: 10px;
@@ -441,11 +449,8 @@ input[type="text"]:focus{
   z-index: 3;
 }
 
-/* ✅ Toggle du rendu (dans les bulles) : OFF visible */
-.bubbleTools .switch{
-  width: 54px;
-  height: 30px;
-}
+/* Toggle inside bubbles: OFF visible */
+.bubbleTools .switch{ width: 54px; height: 30px; }
 
 .bubbleTools .slider{
   background: rgba(0,0,0,.16);
@@ -483,9 +488,11 @@ body.exporting .pageSpacer{ width: var(--page-w) !important; height: var(--page-
 
 /* Mobile export panel */
 .exportPanel{
-  position: fixed; inset: 0;
+  position: fixed;
+  inset: 0;
   background: rgba(0,0,0,.6);
-  display: grid; place-items: center;
+  display: grid;
+  place-items: center;
   padding: 16px;
   z-index: 9999;
 }
@@ -497,7 +504,12 @@ body.exporting .pageSpacer{ width: var(--page-w) !important; height: var(--page-
   padding: 14px;
 }
 .exportPanelTitle{ font-weight: 850; margin-bottom: 6px; }
-.exportPanelHint{ color: rgba(255,255,255,.72); font-size: .92rem; line-height: 1.35; margin-bottom: 10px; }
+.exportPanelHint{
+  color: rgba(255,255,255,.72);
+  font-size: .92rem;
+  line-height: 1.35;
+  margin-bottom: 10px;
+}
 
 .exportLinks{ display: grid; gap: 8px; margin-bottom: 12px; }
 .exportLinks a{
@@ -528,18 +540,3 @@ body.exporting .pageSpacer{ width: var(--page-w) !important; height: var(--page-
   background: rgba(215,192,138,.22);
   border-color: rgba(215,192,138,.35);
 }
-/* === Bulles sombres : base pleine + voile transparent === */
-.bubble[data-bubble="dark"]{
-  background: #212121;           /* base réelle, stable à l’export */
-  position: relative;
-}
-
-.bubble[data-bubble="dark"]::after{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,.22);   /* voile subtil, conserve la transparence */
-  pointer-events: none;
-  border-radius: inherit;
-}
-[hidden]{ display: none !important; }
