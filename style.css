@@ -87,9 +87,7 @@
   --paperA: #0f0f12; /* fallback discret */
   --paperB: #0b0b0e;
 
-  /* ⚠️ choisis UNE des deux lignes ci-dessous selon TON fichier */
-  /* --theme-img: url("themes/marbrenoir.png"); */
-  --theme-img: url("themes/MarbreNoir.png");
+  /* --theme-img: url("themes/marbrenoir.webp"); */
 
   --theme-img-opacity: 1;
   --theme-img-blend: normal;
