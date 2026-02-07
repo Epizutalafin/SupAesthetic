@@ -29,7 +29,7 @@
   --content-pad-x: 46px; /* ✅ tes marges latérales "actuelles" */
 
   /* Bubble typography */
-  --bubble-font: 26px;
+  --bubble-font: 25px;
   --bubble-line: 1.38;
 
   /* Bubble paddings */
@@ -465,7 +465,7 @@ input[type="text"]:focus{
   position: relative;
   display: inline-block;
   width: fit-content;
-  max-width: min(86%, 680px, 42ch);
+  max-width: min(86%, 680px, 45ch);
 
   background: var(--bubble-bg);
   color: var(--bubble-text);
