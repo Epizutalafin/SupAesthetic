@@ -72,7 +72,6 @@
 
 /* =========================
    Themes
-   IMPORTANT: tout en minuscules, et le nom de fichier DOIT matcher
    ========================= */
 :root[data-theme="classic"]{
   --paperA: #f7f1e3;
@@ -96,6 +95,13 @@
 *{ box-sizing: border-box; }
 html, body{ height: 100%; }
 [hidden]{ display: none !important; }
+
+.logo img {
+  width: 150px; /* Ajuste la largeur comme nécessaire */
+  height: auto; /* Pour garder les proportions */
+  display: block;
+  margin: 0 auto; /* Centrer l'image si nécessaire */
+}
 
 body{
   margin: 0;
