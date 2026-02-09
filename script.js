@@ -679,7 +679,6 @@ function downscaleCanvas(srcCanvas, outW, outH) {
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
   ctx.drawImage(srcCanvas, 0, 0, outW, outH);
-  const imageData = canvas.toDataURL('image/png', 0.85);
 
   return out;
 }
