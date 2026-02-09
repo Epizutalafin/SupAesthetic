@@ -5,7 +5,7 @@ const EXPORT_W = 832;
 const EXPORT_H = 1472;
 
 const PREVIEW_MAX_SCALE = 0.62;
-const PNG_RENDER_SCALE = 2.5;
+const PNG_RENDER_SCALE = 2;
 
 const CENTER_MIN_FREE = 140;
 const CENTER_MAX_SHIFT = 260;
@@ -677,7 +677,7 @@ function downscaleCanvas(srcCanvas, outW, outH) {
 
   const ctx = out.getContext("2d", { alpha: true });
   ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = "medium";
+  ctx.imageSmoothingQuality = "high";
   ctx.drawImage(srcCanvas, 0, 0, outW, outH);
 
   return out;
