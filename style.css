@@ -61,12 +61,12 @@
   /* =========================
      Bubble styles per speaker
      ========================= */
-  --bubble-bg-supa: rgba(255,255,255,.90);
-  --bubble-text-supa: rgba(10,12,14,.92);
+  --bubble-bg-supa: rgba(255,255,255,.92);
+  --bubble-text-supa: rgba(10,12,14,.94);
   --bubble-border-supa: rgba(255,255,255,.72);
 
-  --bubble-bg-me: rgba(255,255,255,.90);
-  --bubble-text-me: rgba(10,12,14,.92);
+  --bubble-bg-me: rgba(255,255,255,.92);
+  --bubble-text-me: rgba(10,12,14,.94);
   --bubble-border-me: rgba(255,255,255,.72);
 }
 
