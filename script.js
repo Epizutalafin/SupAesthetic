@@ -1,8 +1,8 @@
 /* =========================
    Constants
    ========================= */
-const EXPORT_W = 832;
-const EXPORT_H = 1472;
+const EXPORT_W = 672;
+const EXPORT_H = 1184;
 
 const PREVIEW_MAX_SCALE = 0.62;
 const PNG_RENDER_SCALE = 2;
