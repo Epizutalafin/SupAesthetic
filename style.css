@@ -81,6 +81,22 @@
   --theme-img-blend: multiply;
 }
 
+:root[data-theme="constellations"]{
+  --paperA: #0f0f12;
+  --paperB: #0b0b0e;
+  --theme-img: url("themes/constellations.webp");
+  --theme-img-opacity: 1;
+  --theme-img-blend: normal;
+}
+
+:root[data-theme="foret"]{
+  --paperA: #0f0f12;
+  --paperB: #0b0b0e;
+  --theme-img: url("themes/foret.webp");
+  --theme-img-opacity: 1;
+  --theme-img-blend: normal;
+}
+
 :root[data-theme="marbrenoir"]{
   --paperA: #0f0f12;
   --paperB: #0b0b0e;
