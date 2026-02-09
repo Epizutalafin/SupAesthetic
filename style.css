@@ -97,10 +97,10 @@ html, body{ height: 100%; }
 [hidden]{ display: none !important; }
 
 .logo img {
-  width: 150px; /* Ajuste la largeur comme nécessaire */
-  height: auto; /* Pour garder les proportions */
+  width: 150px;
+  height: auto;
   display: block;
-  margin: 0 auto; /* Centrer l'image si nécessaire */
+  margin: 0 auto;
 }
 
 body{
