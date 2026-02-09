@@ -5,7 +5,7 @@ const EXPORT_W = 832;
 const EXPORT_H = 1472;
 
 const PREVIEW_MAX_SCALE = 0.62;
-const PNG_RENDER_SCALE = 1.5;
+const PNG_RENDER_SCALE = 2.5;
 
 const CENTER_MIN_FREE = 140;
 const CENTER_MAX_SHIFT = 260;
