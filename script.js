@@ -48,7 +48,7 @@ const BUBBLE_CHOICES = [
   {
     id: "aqua",
     label: "Eau",
-    bg: "rgba(140,210,200,.08)",
+    bg: "rgba(140,210,200,.45)",
     text: "rgba(10,12,14,.92)",
     border: "rgba(255,255,255,.55)",
     chip: "rgba(140,210,200,.22)",
@@ -56,7 +56,7 @@ const BUBBLE_CHOICES = [
   {
     id: "rose",
     label: "Rose",
-    bg: "rgba(235,170,190,.08)",
+    bg: "rgba(235,170,190,.45)",
     text: "rgba(10,12,14,.92)",
     border: "rgba(255,255,255,.55)",
     chip: "rgba(235,170,190,.22)",
