@@ -48,18 +48,18 @@ const BUBBLE_CHOICES = [
   {
     id: "aqua",
     label: "Eau",
-    bg: "rgba(140,210,200,.45)",
-    text: "rgba(10,12,14,.92)",
-    border: "rgba(255,255,255,.55)",
-    chip: "rgba(140,210,200,.22)",
+    bg: "rgba(222,245,240,.58)",
+    text: "rgba(18,22,24,.94)",
+    border: "rgba(255,255,255,.42)",
+    chip: "rgba(210,240,234,.78)",
   },
   {
     id: "rose",
     label: "Rose",
-    bg: "rgba(235,170,190,.45)",
-    text: "rgba(10,12,14,.92)",
-    border: "rgba(255,255,255,.55)",
-    chip: "rgba(235,170,190,.22)",
+    bg: "rgba(248,228,235,.58)",
+    text: "rgba(22,18,20,.94)",
+    border: "rgba(255,255,255,.42)",
+    chip: "rgba(245,220,230,.78)",
   },
 ];
 
