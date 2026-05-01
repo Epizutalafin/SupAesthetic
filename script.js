@@ -32,7 +32,7 @@ const BUBBLE_CHOICES = [
   {
     id: "light",
     label: "Clair",
-    bg: "rgba(255,255,255,.62)",
+    bg: "rgba(255,255,255,.72)",
     text: "rgba(10,12,14,.92)",
     border: "rgba(255,255,255,.55)",
     chip: "rgba(255,255,255,.62)",
@@ -40,7 +40,7 @@ const BUBBLE_CHOICES = [
   {
     id: "dark",
     label: "Sombre",
-    bg: "rgba(12,14,18,.72)",
+    bg: "rgba(12,14,18,.74)",
     text: "rgba(255,255,255,.92)",
     border: "rgba(255,255,255,.14)",
     chip: "rgba(12,14,18,.72)",
@@ -48,7 +48,7 @@ const BUBBLE_CHOICES = [
   {
     id: "aqua",
     label: "Eau",
-    bg: "rgba(222,245,240,.58)",
+    bg: "rgba(222,245,240,.72)",
     text: "rgba(18,22,24,.94)",
     border: "rgba(255,255,255,.42)",
     chip: "rgba(210,240,234,.78)",
@@ -56,7 +56,7 @@ const BUBBLE_CHOICES = [
   {
     id: "rose",
     label: "Rose",
-    bg: "rgba(248,228,235,.58)",
+    bg: "rgba(248,228,235,.72)",
     text: "rgba(22,18,20,.94)",
     border: "rgba(255,255,255,.42)",
     chip: "rgba(245,220,230,.78)",
